@@ -20,7 +20,6 @@
             "description": "Your API Key",
             "data_type": "password",
             "required": true,
-            "value_list": [],
             "default": "",
             "order": 0
         },
@@ -28,16 +27,8 @@
             "description": "Check for IP Reports within this number of days",
             "data_type": "string",
             "required": true,
-            "value_list": [],
-            "default": "",
+            "default": "30",
             "order": 1
-        },
-        "verify_ssl_cert": {
-            "description": "Verify SSL Certificate",
-            "data_type": "boolean",
-            "required": true,
-            "default": false,
-            "order": 2
         }
     },
     "actions": [
@@ -53,8 +44,8 @@
             "versions": "EQ(*)"
         },
         {
-            "action": "ip reputation",
-            "identifier": "ip_reputation",
+            "action": "lookup ip",
+            "identifier": "lookup_ip",
             "description": "Queries IP info",
             "verbose": "",
             "type": "investigate",
@@ -79,15 +70,41 @@
                     "data_type": "string",
                     "contains": [
                         "ip"
-                    ],
-                    "column_name": "ip",
-                    "column_order": 0
+                    ]
                 },
                 {
                     "data_path": "action_result.status",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.ip",
                     "data_type": "string",
-                    "column_name": "status",
+                    "column_name": "IP",
+                    "column_order": 0
+                },
+                {
+                    "data_path": "action_result.data.*.isoCode",
+                    "data_type": "string",
+                    "column_name": "ISO Code",
                     "column_order": 1
+                },
+                {
+                    "data_path": "action_result.data.*.category_list",
+                    "data_type": "string",
+                    "column_name": "Categories",
+                    "column_order": 2
+                },
+                {
+                    "data_path": "action_result.data.*.country",
+                    "data_type": "string",
+                    "column_name": "Country",
+                    "column_order": 3
+                },
+                {
+                    "data_path": "action_result.data.*.created",
+                    "data_type": "string",
+                    "column_name": "Date Created",
+                    "column_order": 4
                 },
                 {
                     "data_path": "action_result.message",
@@ -120,7 +137,7 @@
                     "data_type": "string",
                     "required": true,
                     "primary": true,
-                    "contains": [],
+                    "contains": ["ip"],
                     "value_list": [],
                     "default": "",
                     "order": 0
@@ -150,7 +167,9 @@
                 {
                     "data_path": "action_result.parameter.ip",
                     "data_type": "string",
-                    "contains": [],
+                    "contains": [
+                        "ip"
+                    ],
                     "column_name": "ip",
                     "column_order": 0
                 },
