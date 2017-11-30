@@ -114,10 +114,7 @@ class AbuseipdbConnector(BaseConnector):
 
     def _make_rest_call(self, endpoint, action_result, headers=None, params=None, json=None, method="post"):
 
-        if json:
-            json["key"] = self._api_key
-        else:
-            json = {"key": self._api_key, "days": self._days}
+        json["key"] = self._api_key
 
         resp_json = None
 
@@ -152,7 +149,6 @@ class AbuseipdbConnector(BaseConnector):
         if phantom.is_fail(ret_val):
             # the call to the 3rd party device or service failed, action result should contain all the error details
             # so just return from here
-            self.save_progress("Test Connectivity Failed. Error: {0}".format(action_result.get_message()))
             return action_result.get_status()
 
         # Return success
@@ -167,10 +163,11 @@ class AbuseipdbConnector(BaseConnector):
         action_result = self.add_action_result(ActionResult(dict(param)))
 
         ip = param['ip']
+        data = {"days": param['days']}
 
         # make rest call
         # The response is a list of all the reports that we got back from checking the IP
-        ret_val, reports = self._make_rest_call('/check/' + ip + '/json', action_result, params=None, headers=None)
+        ret_val, reports = self._make_rest_call('/check/' + ip + '/json', action_result, json=data, params=None, headers=None)
 
         if (phantom.is_fail(ret_val)):
             return action_result.get_status()
@@ -211,7 +208,7 @@ class AbuseipdbConnector(BaseConnector):
         summary['reports_found'] = len(reports)
         summary['unique_categories'] = len(unique_categories)
 
-        return action_result.set_status(phantom.APP_SUCCESS)
+        return action_result.set_status(phantom.APP_SUCCESS, "IP Lookup complete")
 
     def _handle_report_ip(self, param):
 
@@ -234,7 +231,7 @@ class AbuseipdbConnector(BaseConnector):
         # Add the response into the data section
         action_result.add_data(response)
 
-        return action_result.set_status(phantom.APP_SUCCESS)
+        return action_result.set_status(phantom.APP_SUCCESS, "Successfully reported IP")
 
     def handle_action(self, param):
 

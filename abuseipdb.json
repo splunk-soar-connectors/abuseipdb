@@ -1,34 +1,25 @@
 {
     "appid": "52876771-17a7-45ad-8cc5-513bbd2172c5",
     "name": "AbuseIPDB",
-    "description": "Report malicious IP addresses, and gain access to a crowdsourced list of bad IPs",
+    "description": "This app integrates with AbuseIPDB to perform investigative actions",
     "type": "reputation",
     "product_vendor": "AbuseIPDB",
     "logo": "abuseipdb.png",
     "product_name": "AbuseIPDB",
     "product_version_regex": ".*",
     "publisher": "Phantom",
-    "license": "Copyright Phantom 2017",
+    "license": "Copyright (c) Phantom Cyber Corporation, 2017",
     "app_version": "1.0.0",
     "utctime_updated": "2017-10-21T14:22:46.273707Z",
     "package_name": "phantom_abuseipdb",
     "main_module": "abuseipdb_connector.pyc",
-    "min_phantom_version": "3.0.251",
+    "min_phantom_version": "3.0.264",
     "app_wizard_version": "1.0.0",
     "configuration": {
         "api_key": {
-            "description": "Your API Key",
+            "description": "API Key",
             "data_type": "password",
-            "required": true,
-            "default": "",
-            "order": 0
-        },
-        "days": {
-            "description": "Check for IP Reports within this number of days",
-            "data_type": "string",
-            "required": true,
-            "default": "30",
-            "order": 1
+            "required": true
         }
     },
     "actions": [
@@ -36,7 +27,6 @@
             "action": "test connectivity",
             "identifier": "test_connectivity",
             "description": "Validate the asset configuration for connectivity using supplied configuration",
-            "verbose": "",
             "type": "test",
             "read_only": true,
             "parameters": {},
@@ -47,7 +37,6 @@
             "action": "lookup ip",
             "identifier": "lookup_ip",
             "description": "Queries IP info",
-            "verbose": "",
             "type": "investigate",
             "read_only": true,
             "parameters": {
@@ -60,8 +49,13 @@
                         "ip"
                     ],
                     "value_list": [],
-                    "default": "",
                     "order": 0
+                },
+                "days": {
+                    "description": "Check for IP Reports within this number of days",
+                    "data_type": "numeric",
+                    "required": true,
+                    "order": 1
                 }
             },
             "output": [
@@ -128,8 +122,8 @@
             "action": "report ip",
             "identifier": "report_ip",
             "description": "Report IP",
-            "verbose": "Submit an abuse report to AbuseIPDB",
-            "type": "correct",
+            "verbose": "Report an IP for abusive behavior",
+            "type": "generic",
             "read_only": false,
             "parameters": {
                 "ip": {
@@ -139,7 +133,6 @@
                     "primary": true,
                     "contains": ["ip"],
                     "value_list": [],
-                    "default": "",
                     "order": 0
                 },
                 "categories": {
@@ -149,7 +142,6 @@
                     "primary": true,
                     "contains": [],
                     "value_list": [],
-                    "default": "",
                     "order": 1
                 },
                 "comment": {
@@ -159,7 +151,6 @@
                     "primary": false,
                     "contains": [],
                     "value_list": [],
-                    "default": "",
                     "order": 2
                 }
             },
