@@ -119,7 +119,7 @@
             "versions": "EQ(*)"
         },
         {
-            "action": "report ip",
+            "action": "post ip",
             "identifier": "report_ip",
             "description": "Report IP",
             "verbose": "Report an IP for abusive behavior",
