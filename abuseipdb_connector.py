@@ -112,9 +112,10 @@ class AbuseipdbConnector(BaseConnector):
 
         return RetVal(action_result.set_status(phantom.APP_ERROR, message), None)
 
-    def _make_rest_call(self, endpoint, action_result, headers=None, params=None, json={}, method="post"):
+    def _make_rest_call(self, endpoint, action_result, headers=None, params=None, json=None, method="post"):
 
-        json["key"] = self._api_key
+        if not json:
+            json = {'key': self._api_key}
 
         resp_json = None
 
