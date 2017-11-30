@@ -116,6 +116,8 @@ class AbuseipdbConnector(BaseConnector):
 
         if not json:
             json = {'key': self._api_key}
+        else:
+            json['key'] = self._api_key
 
         resp_json = None
 
