@@ -112,12 +112,12 @@ class AbuseipdbConnector(BaseConnector):
 
         return RetVal(action_result.set_status(phantom.APP_ERROR, message), None)
 
-    def _make_rest_call(self, endpoint, action_result, headers=None, params=None, json=None, method="post"):
+    def _make_rest_call(self, endpoint, action_result, headers=None, params=None, json_data=None, method="post"):
 
-        if not json:
-            json = {'key': self._api_key}
-        else:
-            json['key'] = self._api_key
+        if not json_data:
+            json_data = dict()
+
+        json_data['key'] = self._api_key
 
         resp_json = None
 
@@ -132,7 +132,7 @@ class AbuseipdbConnector(BaseConnector):
         try:
             r = request_func(
                 url,
-                json=json,
+                json=json_data,
                 headers=headers,
                 params=params)
         except Exception as e:
@@ -170,7 +170,7 @@ class AbuseipdbConnector(BaseConnector):
 
         # make rest call
         # The response is a list of all the reports that we got back from checking the IP
-        ret_val, reports = self._make_rest_call('/check/' + ip + '/json', action_result, json=data, params=None, headers=None)
+        ret_val, reports = self._make_rest_call('/check/' + ip + '/json', action_result, json_data=data, params=None, headers=None)
 
         if (phantom.is_fail(ret_val)):
             return action_result.get_status()
@@ -226,7 +226,7 @@ class AbuseipdbConnector(BaseConnector):
 
         data = {"ip": ip, "category": categories, "comment": comment}
         # make rest call
-        ret_val, response = self._make_rest_call('/report/json', action_result, json=data, params=None, headers=None)
+        ret_val, response = self._make_rest_call('/report/json', action_result, json_data=data, params=None, headers=None)
 
         if (phantom.is_fail(ret_val)):
             return action_result.get_status()
@@ -267,7 +267,6 @@ class AbuseipdbConnector(BaseConnector):
         # get the asset config
         config = self.get_config()
 
-        self._days = config['days']
         self._api_key = config['api_key']
 
         return phantom.APP_SUCCESS

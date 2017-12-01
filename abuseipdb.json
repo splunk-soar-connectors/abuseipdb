@@ -55,6 +55,7 @@
                     "description": "Check for IP Reports within this number of days",
                     "data_type": "numeric",
                     "required": true,
+                    "default": "10",
                     "order": 1
                 }
             },
@@ -81,6 +82,18 @@
                     "data_type": "string",
                     "column_name": "ISO Code",
                     "column_order": 1
+                },
+                {
+                    "data_path": "action_result.data.*.category.*.id",
+                    "data_type": "numeric"
+                },
+                {
+                    "data_path": "action_result.data.*.category.*.title",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.category.*.description",
+                    "data_type": "string"
                 },
                 {
                     "data_path": "action_result.data.*.category_list",

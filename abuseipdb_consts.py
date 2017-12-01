@@ -22,6 +22,10 @@ CATEGORIES = {
         "id": "4",
         "title": "DDoS Attack",
         "description": "Participating in distributed denial-of-service (usually part of botnet)."},
+    "5": {
+        "id": "5",
+        "title": "FTP Brute-Force",
+        "description": "No description available. Category is DEPRECATED"},
     "9": {
         "id": "9",
         "title": "Open Proxy",
@@ -39,6 +43,10 @@ CATEGORIES = {
         "id": "14",
         "title": "Port Scan",
         "description": "Scanning for open ports and vulnerable services."},
+    "15": {
+        "id": "15",
+        "title": "Hacking",
+        "description": "No description available. Category is DEPRECATED"},
     "18": {
         "id": "18",
         "title": "Brute-Force",
