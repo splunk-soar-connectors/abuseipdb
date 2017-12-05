@@ -68,6 +68,10 @@
                     ]
                 },
                 {
+                    "data_path": "action_result.parameter.days",
+                    "data_type": "numeric"
+                },
+                {
                     "data_path": "action_result.status",
                     "data_type": "string"
                 },
@@ -118,11 +122,15 @@
                     "data_type": "string"
                 },
                 {
-                    "data_path": "summary.total_objects",
+                    "data_path": "action_result.summary",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.summary.reports_found",
                     "data_type": "numeric"
                 },
                 {
-                    "data_path": "summary.total_objects_successful",
+                    "data_path": "action_result.summary.unique_categories",
                     "data_type": "numeric"
                 }
             ],
@@ -134,8 +142,8 @@
         {
             "action": "post ip",
             "identifier": "report_ip",
-            "description": "Report IP",
-            "verbose": "Report an IP for abusive behavior",
+            "description": "Report an IP for abusive behavior",
+            "verbose": "Reports an IP given the categories. The categories can be found in <a href='https://www.abuseipdb.com/categories'>Report Categories</a>. There is a limit on reporting the same IP for an interval of <b>15 minutes</b>. There is a comment limit of <b>1500 characters</b>",
             "type": "generic",
             "read_only": false,
             "parameters": {
@@ -202,11 +210,19 @@
                     "data_type": "string"
                 },
                 {
-                    "data_path": "summary.total_objects",
+                    "data_path": "action_result.summary",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.summary.categories_filed",
                     "data_type": "numeric"
                 },
                 {
-                    "data_path": "summary.total_objects_successful",
+                    "data_path": "action_result.summary.comment_length",
                     "data_type": "numeric"
                 }
             ],

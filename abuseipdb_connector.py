@@ -211,7 +211,11 @@ class AbuseipdbConnector(BaseConnector):
         summary['reports_found'] = len(reports)
         summary['unique_categories'] = len(unique_categories)
 
-        return action_result.set_status(phantom.APP_SUCCESS, "IP Lookup complete")
+        message = "IP lookup complete. Reports found: {}, Unique categories: {}".format(
+            summary['reports_found'],
+            summary['unique_categories'])
+
+        return action_result.set_status(phantom.APP_SUCCESS, message)
 
     def _handle_report_ip(self, param):
 
@@ -222,7 +226,7 @@ class AbuseipdbConnector(BaseConnector):
 
         ip = param['ip']
         categories = param['categories']
-        comment = param.get('comment')
+        comment = param.get('comment', '')
 
         data = {"ip": ip, "category": categories, "comment": comment}
         # make rest call
@@ -234,7 +238,16 @@ class AbuseipdbConnector(BaseConnector):
         # Add the response into the data section
         action_result.add_data(response)
 
-        return action_result.set_status(phantom.APP_SUCCESS, "Successfully reported IP")
+        summary = action_result.update_summary({})
+        list_categories = categories.strip().replace(' ', '').split(',')
+        summary['categories_filed'] = len(list_categories)
+        summary['comment_length'] = len(comment)
+
+        message = "IP reported. Number of categories filed: {}, Comment length: {}".format(
+            summary['categories_filed'],
+            summary['comment_length'])
+
+        return action_result.set_status(phantom.APP_SUCCESS, message)
 
     def handle_action(self, param):
 
