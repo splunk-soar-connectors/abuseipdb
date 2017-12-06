@@ -1,0 +1,235 @@
+{
+    "appid": "52876771-17a7-45ad-8cc5-513bbd2172c5",
+    "name": "AbuseIPDB",
+    "description": "This app integrates with AbuseIPDB to perform investigative actions",
+    "type": "reputation",
+    "product_vendor": "AbuseIPDB",
+    "logo": "abuseipdb.png",
+    "product_name": "AbuseIPDB",
+    "product_version_regex": ".*",
+    "publisher": "Phantom",
+    "license": "Copyright (c) Phantom Cyber Corporation, 2017",
+    "app_version": "1.0.0",
+    "utctime_updated": "2017-10-21T14:22:46.273707Z",
+    "package_name": "phantom_abuseipdb",
+    "main_module": "abuseipdb_connector.pyc",
+    "min_phantom_version": "3.0.264",
+    "app_wizard_version": "1.0.0",
+    "configuration": {
+        "api_key": {
+            "description": "API Key",
+            "data_type": "password",
+            "required": true
+        }
+    },
+    "actions": [
+        {
+            "action": "test connectivity",
+            "identifier": "test_connectivity",
+            "description": "Validate the asset configuration for connectivity using supplied configuration",
+            "type": "test",
+            "read_only": true,
+            "parameters": {},
+            "output": [],
+            "versions": "EQ(*)"
+        },
+        {
+            "action": "lookup ip",
+            "identifier": "lookup_ip",
+            "description": "Queries IP info",
+            "type": "investigate",
+            "read_only": true,
+            "parameters": {
+                "ip": {
+                    "description": "IP to query",
+                    "data_type": "string",
+                    "required": true,
+                    "primary": true,
+                    "contains": [
+                        "ip"
+                    ],
+                    "value_list": [],
+                    "order": 0
+                },
+                "days": {
+                    "description": "Check for IP Reports within this number of days",
+                    "data_type": "numeric",
+                    "required": true,
+                    "default": "10",
+                    "order": 1
+                }
+            },
+            "output": [
+                {
+                    "data_path": "action_result.parameter.ip",
+                    "data_type": "string",
+                    "contains": [
+                        "ip"
+                    ]
+                },
+                {
+                    "data_path": "action_result.parameter.days",
+                    "data_type": "numeric"
+                },
+                {
+                    "data_path": "action_result.status",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.ip",
+                    "data_type": "string",
+                    "column_name": "IP",
+                    "column_order": 0
+                },
+                {
+                    "data_path": "action_result.data.*.isoCode",
+                    "data_type": "string",
+                    "column_name": "ISO Code",
+                    "column_order": 1
+                },
+                {
+                    "data_path": "action_result.data.*.category.*.id",
+                    "data_type": "numeric"
+                },
+                {
+                    "data_path": "action_result.data.*.category.*.title",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.category.*.description",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.category_list",
+                    "data_type": "string",
+                    "column_name": "Categories",
+                    "column_order": 2
+                },
+                {
+                    "data_path": "action_result.data.*.country",
+                    "data_type": "string",
+                    "column_name": "Country",
+                    "column_order": 3
+                },
+                {
+                    "data_path": "action_result.data.*.created",
+                    "data_type": "string",
+                    "column_name": "Date Created",
+                    "column_order": 4
+                },
+                {
+                    "data_path": "action_result.message",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.summary",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.summary.reports_found",
+                    "data_type": "numeric"
+                },
+                {
+                    "data_path": "action_result.summary.unique_categories",
+                    "data_type": "numeric"
+                }
+            ],
+            "render": {
+                "type": "table"
+            },
+            "versions": "EQ(*)"
+        },
+        {
+            "action": "post ip",
+            "identifier": "report_ip",
+            "description": "Report an IP for abusive behavior",
+            "verbose": "Reports an IP given the categories. The categories can be found in <a href='https://www.abuseipdb.com/categories'>Report Categories</a>. There is a limit on reporting the same IP for an interval of <b>15 minutes</b>. There is a comment limit of <b>1500 characters</b>",
+            "type": "generic",
+            "read_only": false,
+            "parameters": {
+                "ip": {
+                    "description": "IP to report on",
+                    "data_type": "string",
+                    "required": true,
+                    "primary": true,
+                    "contains": ["ip"],
+                    "value_list": [],
+                    "order": 0
+                },
+                "categories": {
+                    "description": "Comma delineated list of category IDs",
+                    "data_type": "string",
+                    "required": true,
+                    "primary": true,
+                    "contains": [],
+                    "value_list": [],
+                    "order": 1
+                },
+                "comment": {
+                    "description": "Description of malicious activity",
+                    "data_type": "string",
+                    "required": false,
+                    "primary": false,
+                    "contains": [],
+                    "value_list": [],
+                    "order": 2
+                }
+            },
+            "output": [
+                {
+                    "data_path": "action_result.parameter.ip",
+                    "data_type": "string",
+                    "contains": [
+                        "ip"
+                    ],
+                    "column_name": "ip",
+                    "column_order": 0
+                },
+                {
+                    "data_path": "action_result.parameter.categories",
+                    "data_type": "string",
+                    "contains": [],
+                    "column_name": "categories",
+                    "column_order": 1
+                },
+                {
+                    "data_path": "action_result.parameter.comment",
+                    "data_type": "string",
+                    "contains": [],
+                    "column_name": "comment",
+                    "column_order": 2
+                },
+                {
+                    "data_path": "action_result.status",
+                    "data_type": "string",
+                    "column_name": "status",
+                    "column_order": 3
+                },
+                {
+                    "data_path": "action_result.message",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.summary",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.summary.categories_filed",
+                    "data_type": "numeric"
+                },
+                {
+                    "data_path": "action_result.summary.comment_length",
+                    "data_type": "numeric"
+                }
+            ],
+            "render": {
+                "type": "table"
+            },
+            "versions": "EQ(*)"
+        }
+    ]
+}
