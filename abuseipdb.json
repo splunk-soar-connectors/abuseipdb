@@ -9,8 +9,8 @@
     "product_version_regex": ".*",
     "publisher": "Phantom",
     "license": "Copyright (c) Phantom Cyber Corporation, 2017",
-    "app_version": "1.0.0",
-    "utctime_updated": "2017-10-21T14:22:46.273707Z",
+    "app_version": "1.0.1",
+    "utctime_updated": "2017-12-07T23:27:17.000000Z",
     "package_name": "phantom_abuseipdb",
     "main_module": "abuseipdb_connector.pyc",
     "min_phantom_version": "3.0.264",
@@ -152,7 +152,9 @@
                     "data_type": "string",
                     "required": true,
                     "primary": true,
-                    "contains": ["ip"],
+                    "contains": [
+                        "ip"
+                    ],
                     "value_list": [],
                     "order": 0
                 },
