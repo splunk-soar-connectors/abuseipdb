@@ -138,6 +138,9 @@ class AbuseipdbConnector(BaseConnector):
         except Exception as e:
             return RetVal(action_result.set_status(phantom.APP_ERROR, "Error Connecting to server. Details: {0}".format(str(e))), resp_json)
 
+        if self.get_action_identifier() == 'test_connectivity' and r.status_code == 429:
+            return RetVal(action_result.set_status(phantom.APP_SUCCESS, ''), None)
+
         return self._process_response(r, action_result)
 
     def _handle_test_connectivity(self, param):
@@ -146,8 +149,14 @@ class AbuseipdbConnector(BaseConnector):
         action_result = self.add_action_result(ActionResult(dict(param)))
 
         self.save_progress("Connecting to AbuseIPDB")
+
+        ip = "127.0.0.1"
+        categories = "4"
+        comment = "Test Connectivity"
+
+        data = {"ip": ip, "category": categories, "comment": comment}
         # make rest call
-        ret_val, response = self._make_rest_call('/check/127.0.0.1/json', action_result, params=None, headers=None)
+        ret_val, response = self._make_rest_call('/report/json', action_result, json_data=data, params=None, headers=None)
 
         if phantom.is_fail(ret_val):
             # the call to the 3rd party device or service failed, action result should contain all the error details
