@@ -138,6 +138,9 @@ class AbuseipdbConnector(BaseConnector):
         except Exception as e:
             return RetVal(action_result.set_status(phantom.APP_ERROR, "Error Connecting to server. Details: {0}".format(str(e))), resp_json)
 
+        # To validate the API key during a test connectivity action, it is necessary to check for
+        # HTTP code 429 since we need to Report (post_ip) 127.0.0.1 causing said error if test connectivity was run
+        # within an interval of 15 min of testing again
         if self.get_action_identifier() == 'test_connectivity' and r.status_code == 429:
             return RetVal(action_result.set_status(phantom.APP_SUCCESS, ''), None)
 

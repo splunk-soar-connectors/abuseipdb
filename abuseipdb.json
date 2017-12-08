@@ -53,7 +53,7 @@
                 },
                 "days": {
                     "description": "Check for IP Reports within this number of days",
-                    "verbose": "A correct API key is not required for looking up an IP. There is a limit of 1000 lookups allowed per day.",
+                    "verbose": "A valid API Key is not required for this action. The service does rate limit to 1000 lookups per day.",
                     "data_type": "numeric",
                     "required": true,
                     "default": "10",
