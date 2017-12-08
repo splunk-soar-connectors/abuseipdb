@@ -37,6 +37,7 @@
             "action": "lookup ip",
             "identifier": "lookup_ip",
             "description": "Queries IP info",
+            "verbose": "A valid API Key is not required for this action. The service does rate limit to 1000 lookups per day.",
             "type": "investigate",
             "read_only": true,
             "parameters": {
@@ -53,7 +54,6 @@
                 },
                 "days": {
                     "description": "Check for IP Reports within this number of days",
-                    "verbose": "A valid API Key is not required for this action. The service does rate limit to 1000 lookups per day.",
                     "data_type": "numeric",
                     "required": true,
                     "default": "10",
