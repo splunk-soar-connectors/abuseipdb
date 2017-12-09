@@ -26,6 +26,14 @@ CATEGORIES = {
         "id": "5",
         "title": "FTP Brute-Force",
         "description": "No description available. Category is DEPRECATED"},
+    "6": {
+        "id": "6",
+        "title": "Ping of Death",
+        "description": "No description available. Category is DEPRECATED"},
+    "7": {
+        "id": "7",
+        "title": "Phishing",
+        "description": "No description available. Category is DEPRECATED"},
     "9": {
         "id": "9",
         "title": "Open Proxy",
