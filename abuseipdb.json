@@ -37,7 +37,7 @@
             "action": "lookup ip",
             "identifier": "lookup_ip",
             "description": "Queries IP info",
-            "verbose": "A valid API Key is not required for this action. TThe AbuseIPDB service has a limit of 1000 lookups per day.",
+            "verbose": "A valid API Key is not required for this action. The AbuseIPDB service has a limit of 1000 lookups per day.",
             "type": "investigate",
             "read_only": true,
             "parameters": {
