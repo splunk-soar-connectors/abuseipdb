@@ -9,8 +9,8 @@
     "product_version_regex": ".*",
     "publisher": "Phantom",
     "license": "Copyright (c) Phantom Cyber Corporation, 2017",
-    "app_version": "1.0.1",
-    "utctime_updated": "2017-12-07T23:27:17.000000Z",
+    "app_version": "1.0.2",
+    "utctime_updated": "2017-12-09T01:27:41.000000Z",
     "package_name": "phantom_abuseipdb",
     "main_module": "abuseipdb_connector.pyc",
     "min_phantom_version": "3.0.264",
@@ -50,7 +50,7 @@
                         "ip"
                     ],
                     "value_list": [],
-                    "example_values":[
+                    "example_values": [
                         "104.192.3.34"
                     ],
                     "order": 0
@@ -70,7 +70,7 @@
                 {
                     "data_path": "action_result.parameter.ip",
                     "data_type": "string",
-                    "example_values":[
+                    "example_values": [
                         "10.14.90.34"
                     ],
                     "contains": [
@@ -80,7 +80,7 @@
                 {
                     "data_path": "action_result.parameter.days",
                     "data_type": "numeric",
-                    "example_values":[
+                    "example_values": [
                         10
                     ]
                 },
@@ -96,7 +96,7 @@
                     "data_type": "string",
                     "column_name": "IP",
                     "column_order": 0,
-                    "example_values":[
+                    "example_values": [
                         "8.8.8.8"
                     ]
                 },
@@ -138,7 +138,7 @@
                     "data_type": "string",
                     "column_name": "Categories",
                     "column_order": 2,
-                    "example_values":[
+                    "example_values": [
                         "3, 4"
                     ]
                 },
@@ -147,7 +147,7 @@
                     "data_type": "string",
                     "column_name": "Country",
                     "column_order": 3,
-                    "example_values":[
+                    "example_values": [
                         "United States"
                     ]
                 },
@@ -156,14 +156,14 @@
                     "data_type": "string",
                     "column_name": "Date Created",
                     "column_order": 4,
-                    "example_values":[
+                    "example_values": [
                         "Fri, 08 Dec 2017 23:27:51 +0000"
                     ]
                 },
                 {
                     "data_path": "action_result.message",
                     "data_type": "string",
-                    "example_values":[
+                    "example_values": [
                         "IP lookup complete. Reports found: 1, Unique categories: 1"
                     ]
                 },
@@ -174,14 +174,14 @@
                 {
                     "data_path": "action_result.summary.reports_found",
                     "data_type": "numeric",
-                    "example_values":[
+                    "example_values": [
                         1
                     ]
                 },
                 {
                     "data_path": "action_result.summary.unique_categories",
                     "data_type": "numeric",
-                    "example_values":[
+                    "example_values": [
                         2
                     ]
                 }
@@ -208,7 +208,7 @@
                         "ip"
                     ],
                     "value_list": [],
-                    "example_values":[
+                    "example_values": [
                         "104.192.3.34"
                     ],
                     "order": 0
@@ -222,7 +222,7 @@
                     "value_list": [],
                     "order": 1,
                     "example_values": [
-                       "3, 4"
+                        "3, 4"
                     ]
                 },
                 "comment": {
@@ -234,7 +234,7 @@
                     "value_list": [],
                     "order": 2,
                     "example_values": [
-                        "Ｌｏｒｅｍ  ｉｐｓｕｍ  ｄｏｌｏｒ  ｓｉｔ  ａｍｅｔ，  ｃｏｎｓｅｃｔｅｔｕｒ  ａｄｉｐｉｓｃｉｎｇ  ｅｌｉｔ．  Ａｌｉｑｕａｍ  ｔｅｌｌｕｓ．"
+                        "\uff2c\uff4f\uff52\uff45\uff4d  \uff49\uff50\uff53\uff55\uff4d  \uff44\uff4f\uff4c\uff4f\uff52  \uff53\uff49\uff54  \uff41\uff4d\uff45\uff54\uff0c  \uff43\uff4f\uff4e\uff53\uff45\uff43\uff54\uff45\uff54\uff55\uff52  \uff41\uff44\uff49\uff50\uff49\uff53\uff43\uff49\uff4e\uff47  \uff45\uff4c\uff49\uff54\uff0e  \uff21\uff4c\uff49\uff51\uff55\uff41\uff4d  \uff54\uff45\uff4c\uff4c\uff55\uff53\uff0e"
                     ]
                 }
             },
@@ -247,7 +247,7 @@
                     ],
                     "column_name": "ip",
                     "column_order": 0,
-                    "example_values":[
+                    "example_values": [
                         "8.8.8.8"
                     ]
                 },
@@ -257,8 +257,8 @@
                     "contains": [],
                     "column_name": "categories",
                     "column_order": 1,
-                    "example_values":[
-                       "3, 4"
+                    "example_values": [
+                        "3, 4"
                     ]
                 },
                 {
@@ -298,14 +298,14 @@
                 {
                     "data_path": "action_result.summary.categories_filed",
                     "data_type": "numeric",
-                    "example_values":[
+                    "example_values": [
                         4
                     ]
                 },
                 {
                     "data_path": "action_result.summary.comment_length",
                     "data_type": "numeric",
-                    "example_values":[
+                    "example_values": [
                         8
                     ]
                 }
