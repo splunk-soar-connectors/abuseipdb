@@ -4,14 +4,13 @@
     "description": "This app integrates with AbuseIPDB to perform investigative actions",
     "type": "reputation",
     "product_vendor": "AbuseIPDB",
-    "logo": "logo_abuseipdb.svg",
-    "logo_dark": "logo_abuseipdb_dark.svg",
+    "logo": "abuseipdb.png",
     "product_name": "AbuseIPDB",
     "product_version_regex": ".*",
     "publisher": "Phantom",
     "license": "Copyright (c) Phantom Cyber Corporation, 2017",
-    "app_version": "1.0.5",
-    "utctime_updated": "2017-12-21T03:22:58.000000Z",
+    "app_version": "1.0.3",
+    "utctime_updated": "2017-12-12T02:37:02.000000Z",
     "package_name": "phantom_abuseipdb",
     "main_module": "abuseipdb_connector.pyc",
     "min_phantom_version": "3.0.251",
@@ -69,20 +68,6 @@
             },
             "output": [
                 {
-                    "data_path": "action_result.status",
-                    "data_type": "string",
-                    "example_values": [
-                        "success"
-                    ]
-                },
-                {
-                    "data_path": "action_result.parameter.days",
-                    "data_type": "numeric",
-                    "example_values": [
-                        10
-                    ]
-                },
-                {
                     "data_path": "action_result.parameter.ip",
                     "data_type": "string",
                     "example_values": [
@@ -93,11 +78,35 @@
                     ]
                 },
                 {
-                    "data_path": "action_result.data.*.category.*.description",
+                    "data_path": "action_result.parameter.days",
+                    "data_type": "numeric",
+                    "example_values": [
+                        10
+                    ]
+                },
+                {
+                    "data_path": "action_result.status",
                     "data_type": "string",
                     "example_values": [
-                        "Fraudulent orders.",
-                        "Open proxy, open relay, or Tor exit node."
+                        "success"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.ip",
+                    "data_type": "string",
+                    "column_name": "IP",
+                    "column_order": 0,
+                    "example_values": [
+                        "8.8.8.8"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.isoCode",
+                    "data_type": "string",
+                    "column_name": "ISO Code",
+                    "column_order": 1,
+                    "example_values": [
+                        "US"
                     ]
                 },
                 {
@@ -114,6 +123,14 @@
                     "example_values": [
                         "DDoS Attack",
                         "Web Spam"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.category.*.description",
+                    "data_type": "string",
+                    "example_values": [
+                        "Fraudulent orders.",
+                        "Open proxy, open relay, or Tor exit node."
                     ]
                 },
                 {
@@ -144,21 +161,10 @@
                     ]
                 },
                 {
-                    "data_path": "action_result.data.*.ip",
+                    "data_path": "action_result.message",
                     "data_type": "string",
-                    "column_name": "IP",
-                    "column_order": 0,
                     "example_values": [
-                        "8.8.8.8"
-                    ]
-                },
-                {
-                    "data_path": "action_result.data.*.isoCode",
-                    "data_type": "string",
-                    "column_name": "ISO Code",
-                    "column_order": 1,
-                    "example_values": [
-                        "US"
+                        "IP lookup complete. Reports found: 1, Unique categories: 1"
                     ]
                 },
                 {
@@ -177,13 +183,6 @@
                     "data_type": "numeric",
                     "example_values": [
                         2
-                    ]
-                },
-                {
-                    "data_path": "action_result.message",
-                    "data_type": "string",
-                    "example_values": [
-                        "IP lookup complete. Reports found: 1, Unique categories: 1"
                     ]
                 }
             ],
@@ -241,12 +240,15 @@
             },
             "output": [
                 {
-                    "data_path": "action_result.status",
+                    "data_path": "action_result.parameter.ip",
                     "data_type": "string",
-                    "column_name": "status",
-                    "column_order": 3,
+                    "contains": [
+                        "ip"
+                    ],
+                    "column_name": "ip",
+                    "column_order": 0,
                     "example_values": [
-                        "success"
+                        "8.8.8.8"
                     ]
                 },
                 {
@@ -270,23 +272,27 @@
                     ]
                 },
                 {
-                    "data_path": "action_result.parameter.ip",
+                    "data_path": "action_result.status",
                     "data_type": "string",
-                    "contains": [
-                        "ip"
-                    ],
-                    "column_name": "ip",
-                    "column_order": 0,
+                    "column_name": "status",
+                    "column_order": 3,
                     "example_values": [
-                        "8.8.8.8"
+                        "success"
                     ]
                 },
                 {
-                    "data_path": "action_result.data",
-                    "data_type": "string"
+                    "data_path": "action_result.message",
+                    "data_type": "string",
+                    "example_values": [
+                        "IP reported. Number of categories filed: 2, Comment length: 193"
+                    ]
                 },
                 {
                     "data_path": "action_result.summary",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data",
                     "data_type": "string"
                 },
                 {
@@ -301,13 +307,6 @@
                     "data_type": "numeric",
                     "example_values": [
                         8
-                    ]
-                },
-                {
-                    "data_path": "action_result.message",
-                    "data_type": "string",
-                    "example_values": [
-                        "IP reported. Number of categories filed: 2, Comment length: 193"
                     ]
                 }
             ],
