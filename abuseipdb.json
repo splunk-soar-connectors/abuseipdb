@@ -11,7 +11,7 @@
     "publisher": "Phantom",
     "license": "Copyright (c) Phantom Cyber Corporation, 2017-2018",
     "app_version": "1.0.5",
-    "utctime_updated": "2018-01-25T03:05:01.000000Z",
+    "utctime_updated": "2018-01-26T00:49:17.000000Z",
     "package_name": "phantom_abuseipdb",
     "main_module": "abuseipdb_connector.pyc",
     "min_phantom_version": "3.0.251",
