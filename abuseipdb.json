@@ -8,7 +8,7 @@
     "product_name": "AbuseIPDB",
     "product_version_regex": ".*",
     "publisher": "Phantom",
-    "license": "Copyright (c) Phantom Cyber Corporation, 2017",
+    "license": "Copyright (c) 2019 Splunk Inc.",
     "app_version": "1.0.6",
     "utctime_updated": "2018-12-07T02:10:31.000000Z",
     "package_name": "phantom_abuseipdb",
@@ -92,7 +92,7 @@
                     ]
                 },
                 {
-                    "data_path": "action_result.data.*.ip",
+                    "data_path": "action_result.data.*.ipAddress",
                     "data_type": "string",
                     "column_name": "IP",
                     "column_order": 0,
@@ -101,7 +101,7 @@
                     ]
                 },
                 {
-                    "data_path": "action_result.data.*.isoCode",
+                    "data_path": "action_result.data.*.countryCode",
                     "data_type": "string",
                     "column_name": "ISO Code",
                     "column_order": 1,
@@ -134,7 +134,7 @@
                     ]
                 },
                 {
-                    "data_path": "action_result.data.*.category_list",
+                    "data_path": "action_result.data.*.reports.categories",
                     "data_type": "string",
                     "column_name": "Categories",
                     "column_order": 2,
@@ -143,7 +143,7 @@
                     ]
                 },
                 {
-                    "data_path": "action_result.data.*.country",
+                    "data_path": "action_result.data.*.countryName",
                     "data_type": "string",
                     "column_name": "Country",
                     "column_order": 3,
@@ -152,7 +152,7 @@
                     ]
                 },
                 {
-                    "data_path": "action_result.data.*.created",
+                    "data_path": "action_result.data.*.lastReportedAt",
                     "data_type": "string",
                     "column_name": "Date Created",
                     "column_order": 4,

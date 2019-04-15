@@ -1,15 +1,8 @@
 # File: abuseipdb_connector.py
+# Copyright (c) 2019 Splunk Inc.
 #
-# Copyright (c) Phantom Cyber Corporation, 2017
-#
-# This unpublished material is proprietary to Phantom Cyber.
-# All rights reserved. The methods and
-# techniques described herein are considered trade secrets
-# and/or confidential. Reproduction or distribution, in whole
-# or in part, is forbidden except by express written permission
-# of Phantom Cyber.
-#
-# --
+# SPLUNK CONFIDENTIAL – Use or disclosure of this material in whole or in part
+# without a valid written license from Splunk Inc. is PROHIBITED.
 
 # Phantom App imports
 import phantom.app as phantom
@@ -17,7 +10,7 @@ from phantom.base_connector import BaseConnector
 from phantom.action_result import ActionResult
 
 # Usage of the consts file is recommended
-from abuseipdb_consts import CATEGORIES
+# from abuseipdb_consts import CATEGORIES
 import requests
 import json
 from bs4 import BeautifulSoup
@@ -114,10 +107,11 @@ class AbuseipdbConnector(BaseConnector):
 
     def _make_rest_call(self, endpoint, action_result, headers=None, params=None, json_data=None, method="post"):
 
-        if not json_data:
-            json_data = dict()
-
-        json_data['key'] = self._api_key
+        # Build headers for v2 API Requests
+        if not headers:
+            headers = dict()
+        headers['key'] = self._api_key
+        headers['accept'] = "application/json"
 
         resp_json = None
 
@@ -153,13 +147,14 @@ class AbuseipdbConnector(BaseConnector):
 
         self.save_progress("Connecting to AbuseIPDB")
 
+        # build body data for POST request
         ip = "127.0.0.1"
         categories = "4"
         comment = "Test Connectivity"
+        data = {"ip": ip, "categories": categories, "comment": comment}
 
-        data = {"ip": ip, "category": categories, "comment": comment}
         # make rest call
-        ret_val, response = self._make_rest_call('/report/json', action_result, json_data=data, params=None, headers=None)
+        ret_val, response = self._make_rest_call('/report', action_result, json_data=data, params=None, headers=None)
 
         if phantom.is_fail(ret_val):
             # the call to the 3rd party device or service failed, action result should contain all the error details
@@ -178,54 +173,28 @@ class AbuseipdbConnector(BaseConnector):
         action_result = self.add_action_result(ActionResult(dict(param)))
 
         ip = param['ip']
-        data = {"days": param['days']}
+        max_age_in_days = param['days']
+        verbose = 'yes'
+        params = {"ipAddress": ip, "maxAgeInDays": max_age_in_days, "verbose": verbose}
 
         # make rest call
         # The response is a list of all the reports that we got back from checking the IP
-        ret_val, reports = self._make_rest_call('/check/' + ip + '/json', action_result, json_data=data, params=None, headers=None)
+        ret_val, reports = self._make_rest_call('/check', action_result, json_data=None, params=params, headers=None, method="get")
+        # self.save_progress("_handle_lookup_ip reports variable: {}".format(reports))
 
         if (phantom.is_fail(ret_val)):
             return action_result.get_status()
 
-        unique_categories = []
-        self.debug_print("response", len(reports))
-
-        if not isinstance(reports, list):
-            reports = [reports]
-
-        for index, report in enumerate(reports):
-            reports[index]['category_list'] = []
-
-            for pos, category in enumerate(report['category']):
-                if CATEGORIES.get(str(category)):
-                    reports[index]['category'][pos] = CATEGORIES[str(category)]
-                    reports[index]['category_list'].append(reports[index]['category'][pos]['title'])
-                else:
-                    # Handle uncategorized option in the App, need to lookup the value
-                    uncategorized = {
-                        "id": "{}".format(category),
-                        "title": "Uncategorized",
-                        "description": "Category not registered in the App. Please lookup up the category in the website"
-                    }
-                    reports[index]['category'][pos] = uncategorized
-                    reports[index]['category_list'].append(uncategorized['id'])
-
-                if category not in unique_categories:
-                    unique_categories.append(category)
-
-            reports[index]['category_list'] = ', '.join(reports[index]['category_list'])
-            # Add the reports into the data section
-            action_result.add_data(reports[index])
-
+        # Add the reports into the data section
+        action_result.add_data(reports)
         self.debug_print("reports", reports)
 
         summary = action_result.update_summary({})
         summary['reports_found'] = len(reports)
-        summary['unique_categories'] = len(unique_categories)
+        # summary['unique_categories'] = len(unique_categories)
 
-        message = "IP lookup complete. Reports found: {}, Unique categories: {}".format(
-            summary['reports_found'],
-            summary['unique_categories'])
+        message = "IP lookup complete. Reports found: {}".format(
+            summary['reports_found'])
 
         return action_result.set_status(phantom.APP_SUCCESS, message)
 
@@ -240,9 +209,9 @@ class AbuseipdbConnector(BaseConnector):
         categories = param['categories']
         comment = param.get('comment', '')
 
-        data = {"ip": ip, "category": categories, "comment": comment}
+        data = {"ip": ip, "categories": categories, "comment": comment}
         # make rest call
-        ret_val, response = self._make_rest_call('/report/json', action_result, json_data=data, params=None, headers=None)
+        ret_val, response = self._make_rest_call('/report', action_result, json_data=data, params=None, headers=None)
 
         if (phantom.is_fail(ret_val)):
             return action_result.get_status()
@@ -287,7 +256,11 @@ class AbuseipdbConnector(BaseConnector):
         # that needs to be accessed across actions
         self._state = self.load_state()
 
-        self._base_url = "https://www.abuseipdb.com"
+        # API v1
+        # self._base_url = "https://www.abuseipdb.com"
+
+        # API v2
+        self._base_url = "https://api.abuseipdb.com/api/v2"
 
         # get the asset config
         config = self.get_config()
