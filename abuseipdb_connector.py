@@ -1,5 +1,5 @@
 # File: abuseipdb_connector.py
-# Copyright (c) 2019 Splunk Inc.
+# Copyright (c) 2017-2019 Splunk Inc.
 #
 # SPLUNK CONFIDENTIAL – Use or disclosure of this material in whole or in part
 # without a valid written license from Splunk Inc. is PROHIBITED.
@@ -9,8 +9,6 @@ import phantom.app as phantom
 from phantom.base_connector import BaseConnector
 from phantom.action_result import ActionResult
 
-# Usage of the consts file is recommended
-# from abuseipdb_consts import CATEGORIES
 import requests
 import json
 from bs4 import BeautifulSoup
@@ -255,9 +253,6 @@ class AbuseipdbConnector(BaseConnector):
         # Load the state in initialize, use it to store data
         # that needs to be accessed across actions
         self._state = self.load_state()
-
-        # API v1
-        # self._base_url = "https://www.abuseipdb.com"
 
         # API v2
         self._base_url = "https://api.abuseipdb.com/api/v2"
