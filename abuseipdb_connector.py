@@ -86,7 +86,7 @@ class AbuseipdbConnector(BaseConnector):
         if 'json' in r.headers.get('Content-Type', ''):
             return self._process_json_response(r, action_result)
 
-        # Process an HTML resonse, Do this no matter what the api talks.
+        # Process an HTML response, Do this no matter what the api talks.
         # There is a high chance of a PROXY in between phantom and the rest of
         # world, in case of errors, PROXY's return HTML, this function parses
         # the error and adds it to the action_result.
@@ -119,7 +119,7 @@ class AbuseipdbConnector(BaseConnector):
             return RetVal(action_result.set_status(phantom.APP_ERROR, "Invalid method: {0}".format(method)), resp_json)
 
         # Create a URL to connect to
-        url = self._base_url + endpoint
+        url = "{}{}".format(self._base_url, endpoint)
 
         try:
             r = request_func(
@@ -204,13 +204,13 @@ class AbuseipdbConnector(BaseConnector):
         action_result = self.add_action_result(ActionResult(dict(param)))
 
         ip = param['ip']
-        categories = param['categories']
+        categories = param['category_ids']
+        categories = ','.join(list(filter(None, categories.split(','))))
         comment = param.get('comment', '')
 
         data = {"ip": ip, "categories": categories, "comment": comment}
         # make rest call
         ret_val, response = self._make_rest_call('/report', action_result, json_data=data, params=None, headers=None)
-
         if (phantom.is_fail(ret_val)):
             return action_result.get_status()
 
