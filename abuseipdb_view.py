@@ -1,4 +1,4 @@
-# File: sep14_view.py
+# File: abuseipdb_view.py
 # Copyright (c) 2017-2019 Splunk Inc.
 #
 # SPLUNK CONFIDENTIAL - Use or disclosure of this material in whole or in part
