@@ -178,18 +178,21 @@ class AbuseipdbConnector(BaseConnector):
         # make rest call
         # The response is a list of all the reports that we got back from checking the IP
         ret_val, reports = self._make_rest_call('/check', action_result, json_data=None, params=params, headers=None, method="get")
-        # self.save_progress("_handle_lookup_ip reports variable: {}".format(reports))
 
         if (phantom.is_fail(ret_val)):
             return action_result.get_status()
 
         # Add the reports into the data section
         action_result.add_data(reports)
-        self.debug_print("reports", reports)
+
+        reports_list = []
+        if reports:
+            data = reports.get('data')
+            if data:
+                reports_list = data.get('reports')
 
         summary = action_result.update_summary({})
-        summary['reports_found'] = len(reports)
-        # summary['unique_categories'] = len(unique_categories)
+        summary['reports_found'] = len(reports_list)
 
         message = "IP lookup complete. Reports found: {}".format(
             summary['reports_found'])
