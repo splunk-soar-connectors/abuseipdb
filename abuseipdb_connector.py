@@ -26,7 +26,7 @@ class AbuseipdbConnector(BaseConnector):
         # Call the BaseConnectors init first
         super(AbuseipdbConnector, self).__init__()
 
-    def _process_empty_reponse(self, response, action_result):
+    def _process_empty_response(self, response, action_result):
 
         if response.status_code == 200:
             return RetVal(phantom.APP_SUCCESS, {})
@@ -54,52 +54,52 @@ class AbuseipdbConnector(BaseConnector):
 
         return RetVal(action_result.set_status(phantom.APP_ERROR, message), None)
 
-    def _process_json_response(self, r, action_result):
+    def _process_json_response(self, response, action_result):
 
         # Try a json parse
         try:
-            resp_json = r.json()
+            resp_json = response.json()
         except Exception as e:
             return RetVal(action_result.set_status(phantom.APP_ERROR, "Unable to parse JSON response. Error: {0}".format(str(e))), None)
 
         # Please specify the status codes here
-        if 200 <= r.status_code < 399:
+        if 200 <= response.status_code < 399:
             return RetVal(phantom.APP_SUCCESS, resp_json)
 
         # You should process the error returned in the json
         message = "Error from server. Status Code: {0} Data from server: {1}".format(
-                  r.status_code, r.text.replace('{', '{{').replace('}', '}}'))
+                  response.status_code, response.text.replace('{', '{{').replace('}', '}}'))
 
         return RetVal(action_result.set_status(phantom.APP_ERROR, message), None)
 
-    def _process_response(self, r, action_result):
+    def _process_response(self, response, action_result):
 
         # store the r_text in debug data, it will get dumped in the logs if the action fails
         if hasattr(action_result, 'add_debug_data'):
-            action_result.add_debug_data({'r_status_code': r.status_code})
-            action_result.add_debug_data({'r_text': r.text})
-            action_result.add_debug_data({'r_headers': r.headers})
+            action_result.add_debug_data({'r_status_code': response.status_code})
+            action_result.add_debug_data({'r_text': response.text})
+            action_result.add_debug_data({'r_headers': response.headers})
 
         # Process each 'Content-Type' of response separately
 
         # Process a json response
-        if 'json' in r.headers.get('Content-Type', ''):
-            return self._process_json_response(r, action_result)
+        if 'json' in response.headers.get('Content-Type', ''):
+            return self._process_json_response(response, action_result)
 
         # Process an HTML response, Do this no matter what the api talks.
         # There is a high chance of a PROXY in between phantom and the rest of
         # world, in case of errors, PROXY's return HTML, this function parses
         # the error and adds it to the action_result.
-        if 'html' in r.headers.get('Content-Type', ''):
-            return self._process_html_response(r, action_result)
+        if 'html' in response.headers.get('Content-Type', ''):
+            return self._process_html_response(response, action_result)
 
         # it's not content-type that is to be parsed, handle an empty response
-        if not r.text:
-            return self._process_empty_reponse(r, action_result)
+        if not response.text:
+            return self._process_empty_response(response, action_result)
 
         # everything else is actually an error at this point
         message = "Can't process response from server. Status Code: {0} Data from server: {1}".format(
-                  r.status_code, r.text.replace('{', '{{').replace('}', '}}'))
+                  response.status_code, response.text.replace('{', '{{').replace('}', '}}'))
 
         return RetVal(action_result.set_status(phantom.APP_ERROR, message), None)
 
@@ -230,23 +230,23 @@ class AbuseipdbConnector(BaseConnector):
 
     def handle_action(self, param):
 
-        ret_val = phantom.APP_SUCCESS
-
-        # Get the action that we are supposed to execute for this App Run
-        action_id = self.get_action_identifier()
-
         self.debug_print("action_id", self.get_action_identifier())
 
-        if action_id == 'test_connectivity':
-            ret_val = self._handle_test_connectivity(param)
+        # Dictionary mapping each action with its corresponding actions
+        action_mapping = {
+            'test_connectivity': self._handle_test_connectivity,
+            'lookup_ip': self._handle_lookup_ip,
+            'report_ip': self._handle_report_ip
+        }
 
-        elif action_id == 'lookup_ip':
-            ret_val = self._handle_lookup_ip(param)
+        action = self.get_action_identifier()
+        action_execution_status = phantom.APP_SUCCESS
 
-        elif action_id == 'report_ip':
-            ret_val = self._handle_report_ip(param)
+        if action in action_mapping.keys():
+            action_function = action_mapping[action]
+            action_execution_status = action_function(param)
 
-        return ret_val
+        return action_execution_status
 
     def initialize(self):
 
@@ -315,7 +315,7 @@ if __name__ == '__main__':
             r2 = requests.post("https://127.0.0.1/login", verify=False, data=data, headers=headers)
             session_id = r2.cookies['sessionid']
         except Exception as e:
-            print ("Unable to get session id from the platfrom. Error: " + str(e))
+            print ("Unable to get session id from the platform. Error: " + str(e))
             exit(1)
 
     with open(args.input_test_json) as f:
