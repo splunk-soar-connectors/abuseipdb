@@ -1,23 +1,14 @@
 # File: abuseipdb_connector.py
+# Copyright (c) 2017-2019 Splunk Inc.
 #
-# Copyright (c) Phantom Cyber Corporation, 2017-2018
-#
-# This unpublished material is proprietary to Phantom Cyber.
-# All rights reserved. The methods and
-# techniques described herein are considered trade secrets
-# and/or confidential. Reproduction or distribution, in whole
-# or in part, is forbidden except by express written permission
-# of Phantom Cyber.
-#
-# --
+# SPLUNK CONFIDENTIAL - Use or disclosure of this material in whole or in part
+# without a valid written license from Splunk Inc. is PROHIBITED.
 
 # Phantom App imports
 import phantom.app as phantom
 from phantom.base_connector import BaseConnector
 from phantom.action_result import ActionResult
 
-# Usage of the consts file is recommended
-from abuseipdb_consts import CATEGORIES
 import requests
 import json
 from bs4 import BeautifulSoup
@@ -35,7 +26,7 @@ class AbuseipdbConnector(BaseConnector):
         # Call the BaseConnectors init first
         super(AbuseipdbConnector, self).__init__()
 
-    def _process_empty_reponse(self, response, action_result):
+    def _process_empty_response(self, response, action_result):
 
         if response.status_code == 200:
             return RetVal(phantom.APP_SUCCESS, {})
@@ -63,61 +54,62 @@ class AbuseipdbConnector(BaseConnector):
 
         return RetVal(action_result.set_status(phantom.APP_ERROR, message), None)
 
-    def _process_json_response(self, r, action_result):
+    def _process_json_response(self, response, action_result):
 
         # Try a json parse
         try:
-            resp_json = r.json()
+            resp_json = response.json()
         except Exception as e:
             return RetVal(action_result.set_status(phantom.APP_ERROR, "Unable to parse JSON response. Error: {0}".format(str(e))), None)
 
         # Please specify the status codes here
-        if 200 <= r.status_code < 399:
+        if 200 <= response.status_code < 399:
             return RetVal(phantom.APP_SUCCESS, resp_json)
 
         # You should process the error returned in the json
         message = "Error from server. Status Code: {0} Data from server: {1}".format(
-                  r.status_code, r.text.replace('{', '{{').replace('}', '}}'))
+                  response.status_code, response.text.replace('{', '{{').replace('}', '}}'))
 
         return RetVal(action_result.set_status(phantom.APP_ERROR, message), None)
 
-    def _process_response(self, r, action_result):
+    def _process_response(self, response, action_result):
 
         # store the r_text in debug data, it will get dumped in the logs if the action fails
         if hasattr(action_result, 'add_debug_data'):
-            action_result.add_debug_data({'r_status_code': r.status_code})
-            action_result.add_debug_data({'r_text': r.text})
-            action_result.add_debug_data({'r_headers': r.headers})
+            action_result.add_debug_data({'r_status_code': response.status_code})
+            action_result.add_debug_data({'r_text': response.text})
+            action_result.add_debug_data({'r_headers': response.headers})
 
         # Process each 'Content-Type' of response separately
 
         # Process a json response
-        if 'json' in r.headers.get('Content-Type', ''):
-            return self._process_json_response(r, action_result)
+        if 'json' in response.headers.get('Content-Type', ''):
+            return self._process_json_response(response, action_result)
 
-        # Process an HTML resonse, Do this no matter what the api talks.
+        # Process an HTML response, Do this no matter what the api talks.
         # There is a high chance of a PROXY in between phantom and the rest of
         # world, in case of errors, PROXY's return HTML, this function parses
         # the error and adds it to the action_result.
-        if 'html' in r.headers.get('Content-Type', ''):
-            return self._process_html_response(r, action_result)
+        if 'html' in response.headers.get('Content-Type', ''):
+            return self._process_html_response(response, action_result)
 
         # it's not content-type that is to be parsed, handle an empty response
-        if not r.text:
-            return self._process_empty_reponse(r, action_result)
+        if not response.text:
+            return self._process_empty_response(response, action_result)
 
         # everything else is actually an error at this point
         message = "Can't process response from server. Status Code: {0} Data from server: {1}".format(
-                  r.status_code, r.text.replace('{', '{{').replace('}', '}}'))
+                  response.status_code, response.text.replace('{', '{{').replace('}', '}}'))
 
         return RetVal(action_result.set_status(phantom.APP_ERROR, message), None)
 
     def _make_rest_call(self, endpoint, action_result, headers=None, params=None, json_data=None, method="post"):
 
-        if not json_data:
-            json_data = dict()
-
-        json_data['key'] = self._api_key
+        # Build headers for v2 API Requests
+        if not headers:
+            headers = dict()
+        headers['key'] = self._api_key
+        headers['accept'] = "application/json"
 
         resp_json = None
 
@@ -127,7 +119,7 @@ class AbuseipdbConnector(BaseConnector):
             return RetVal(action_result.set_status(phantom.APP_ERROR, "Invalid method: {0}".format(method)), resp_json)
 
         # Create a URL to connect to
-        url = self._base_url + endpoint
+        url = "{}{}".format(self._base_url, endpoint)
 
         try:
             r = request_func(
@@ -153,13 +145,14 @@ class AbuseipdbConnector(BaseConnector):
 
         self.save_progress("Connecting to AbuseIPDB")
 
+        # build body data for POST request
         ip = "127.0.0.1"
         categories = "4"
         comment = "Test Connectivity"
+        data = {"ip": ip, "categories": categories, "comment": comment}
 
-        data = {"ip": ip, "category": categories, "comment": comment}
         # make rest call
-        ret_val, response = self._make_rest_call('/report/json', action_result, json_data=data, params=None, headers=None)
+        ret_val, response = self._make_rest_call('/report', action_result, json_data=data, params=None, headers=None)
 
         if phantom.is_fail(ret_val):
             # the call to the 3rd party device or service failed, action result should contain all the error details
@@ -178,54 +171,31 @@ class AbuseipdbConnector(BaseConnector):
         action_result = self.add_action_result(ActionResult(dict(param)))
 
         ip = param['ip']
-        data = {"days": param['days']}
+        max_age_in_days = param['days']
+        verbose = 'yes'
+        params = {"ipAddress": ip, "maxAgeInDays": max_age_in_days, "verbose": verbose}
 
         # make rest call
         # The response is a list of all the reports that we got back from checking the IP
-        ret_val, reports = self._make_rest_call('/check/' + ip + '/json', action_result, json_data=data, params=None, headers=None)
+        ret_val, reports = self._make_rest_call('/check', action_result, json_data=None, params=params, headers=None, method="get")
 
         if (phantom.is_fail(ret_val)):
             return action_result.get_status()
 
-        unique_categories = []
-        self.debug_print("response", len(reports))
+        # Add the reports into the data section
+        action_result.add_data(reports)
 
-        if not isinstance(reports, list):
-            reports = [reports]
-
-        for index, report in enumerate(reports):
-            reports[index]['category_list'] = []
-
-            for pos, category in enumerate(report['category']):
-                if CATEGORIES.get(str(category)):
-                    reports[index]['category'][pos] = CATEGORIES[str(category)]
-                    reports[index]['category_list'].append(reports[index]['category'][pos]['title'])
-                else:
-                    # Handle uncategorized option in the App, need to lookup the value
-                    uncategorized = {
-                        "id": "{}".format(category),
-                        "title": "Uncategorized",
-                        "description": "Category not registered in the App. Please lookup up the category in the website"
-                    }
-                    reports[index]['category'][pos] = uncategorized
-                    reports[index]['category_list'].append(uncategorized['id'])
-
-                if category not in unique_categories:
-                    unique_categories.append(category)
-
-            reports[index]['category_list'] = ', '.join(reports[index]['category_list'])
-            # Add the reports into the data section
-            action_result.add_data(reports[index])
-
-        self.debug_print("reports", reports)
+        reports_list = []
+        if reports:
+            data = reports.get('data')
+            if data:
+                reports_list = data.get('reports')
 
         summary = action_result.update_summary({})
-        summary['reports_found'] = len(reports)
-        summary['unique_categories'] = len(unique_categories)
+        summary['reports_found'] = len(reports_list)
 
-        message = "IP lookup complete. Reports found: {}, Unique categories: {}".format(
-            summary['reports_found'],
-            summary['unique_categories'])
+        message = "IP lookup complete. Reports found: {}".format(
+            summary['reports_found'])
 
         return action_result.set_status(phantom.APP_SUCCESS, message)
 
@@ -237,13 +207,13 @@ class AbuseipdbConnector(BaseConnector):
         action_result = self.add_action_result(ActionResult(dict(param)))
 
         ip = param['ip']
-        categories = param['categories']
+        categories = param['category_ids']
+        categories = ','.join(list(filter(None, categories.split(','))))
         comment = param.get('comment', '')
 
-        data = {"ip": ip, "category": categories, "comment": comment}
+        data = {"ip": ip, "categories": categories, "comment": comment}
         # make rest call
-        ret_val, response = self._make_rest_call('/report/json', action_result, json_data=data, params=None, headers=None)
-
+        ret_val, response = self._make_rest_call('/report', action_result, json_data=data, params=None, headers=None)
         if (phantom.is_fail(ret_val)):
             return action_result.get_status()
 
@@ -263,23 +233,23 @@ class AbuseipdbConnector(BaseConnector):
 
     def handle_action(self, param):
 
-        ret_val = phantom.APP_SUCCESS
-
-        # Get the action that we are supposed to execute for this App Run
-        action_id = self.get_action_identifier()
-
         self.debug_print("action_id", self.get_action_identifier())
 
-        if action_id == 'test_connectivity':
-            ret_val = self._handle_test_connectivity(param)
+        # Dictionary mapping each action with its corresponding actions
+        action_mapping = {
+            'test_connectivity': self._handle_test_connectivity,
+            'lookup_ip': self._handle_lookup_ip,
+            'report_ip': self._handle_report_ip
+        }
 
-        elif action_id == 'lookup_ip':
-            ret_val = self._handle_lookup_ip(param)
+        action = self.get_action_identifier()
+        action_execution_status = phantom.APP_SUCCESS
 
-        elif action_id == 'report_ip':
-            ret_val = self._handle_report_ip(param)
+        if action in action_mapping.keys():
+            action_function = action_mapping[action]
+            action_execution_status = action_function(param)
 
-        return ret_val
+        return action_execution_status
 
     def initialize(self):
 
@@ -287,7 +257,8 @@ class AbuseipdbConnector(BaseConnector):
         # that needs to be accessed across actions
         self._state = self.load_state()
 
-        self._base_url = "https://www.abuseipdb.com"
+        # API v2
+        self._base_url = "https://api.abuseipdb.com/api/v2"
 
         # get the asset config
         config = self.get_config()
@@ -347,7 +318,7 @@ if __name__ == '__main__':
             r2 = requests.post("https://127.0.0.1/login", verify=False, data=data, headers=headers)
             session_id = r2.cookies['sessionid']
         except Exception as e:
-            print ("Unable to get session id from the platfrom. Error: " + str(e))
+            print ("Unable to get session id from the platform. Error: " + str(e))
             exit(1)
 
     with open(args.input_test_json) as f:
