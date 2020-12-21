@@ -9,18 +9,21 @@
     "product_name": "AbuseIPDB",
     "product_version_regex": ".*",
     "publisher": "Splunk",
-    "license": "Copyright (c) 2017-2019 Splunk Inc.",
-    "app_version": "1.0.8",
+    "license": "Copyright (c) 2017-2020 Splunk Inc.",
+    "app_version": "2.0.0",
     "utctime_updated": "2019-05-30T20:04:19.000000Z",
     "package_name": "phantom_abuseipdb",
-    "main_module": "abuseipdb_connector.pyc",
-    "min_phantom_version": "4.0.1068",
+    "main_module": "abuseipdb_connector.py",
+    "min_phantom_version": "4.9.39220",
+    "latest_tested_versions": [""],
     "app_wizard_version": "1.0.0",
+    "python_version": "3",
     "configuration": {
         "api_key": {
             "description": "API Key",
             "data_type": "password",
-            "required": true
+            "required": true,
+            "order": 0
         }
     },
     "actions": [
@@ -38,7 +41,7 @@
             "action": "lookup ip",
             "identifier": "lookup_ip",
             "description": "Queries IP info",
-            "verbose": "The AbuseIPDB service has a limit of 1000 lookups per day",
+            "verbose": "The AbuseIPDB service has a limit of 1000 lookups per day.",
             "type": "investigate",
             "read_only": true,
             "parameters": {
@@ -50,19 +53,13 @@
                     "contains": [
                         "ip"
                     ],
-                    "example_values": [
-                        "104.192.3.34"
-                    ],
                     "order": 0
                 },
                 "days": {
                     "description": "Check for IP Reports within this number of days",
                     "data_type": "numeric",
                     "required": true,
-                    "default": "10",
-                    "example_values": [
-                        32
-                    ],
+                    "default": 10,
                     "order": 1
                 }
             },
@@ -71,7 +68,8 @@
                     "data_path": "action_result.status",
                     "data_type": "string",
                     "example_values": [
-                        "success"
+                        "success",
+                        "failed"
                     ]
                 },
                 {
@@ -250,6 +248,11 @@
                     "example_values": [
                         1
                     ]
+                },
+                {
+                    "data_path": "action_result.data.*.data.numDistinctUsers",
+                    "data_type": "numeric",
+                    "example_value": 0
                 }
             ],
             "render": {
@@ -277,30 +280,18 @@
                     "contains": [
                         "ip"
                     ],
-                    "example_values": [
-                        "104.192.3.34"
-                    ],
                     "order": 0
                 },
                 "category_ids": {
                     "description": "Comma delineated list of category IDs",
                     "data_type": "string",
                     "required": true,
-                    "primary": false,
-                    "order": 1,
-                    "example_values": [
-                        "3, 4"
-                    ]
+                    "order": 1
                 },
                 "comment": {
                     "description": "Description of malicious activity",
                     "data_type": "string",
-                    "required": false,
-                    "primary": false,
-                    "order": 2,
-                    "example_values": [
-                        "Secure Shell (SSH) abuse. This category in combination with more specific categories."
-                    ]
+                    "order": 2
                 }
             },
             "output": [
@@ -310,13 +301,14 @@
                     "column_name": "Status",
                     "column_order": 3,
                     "example_values": [
-                        "success"
+                        "success",
+                        "failed"
                     ]
                 },
                 {
                     "data_path": "action_result.parameter.category_ids",
                     "data_type": "string",
-                    "column_name": "Category IDs",
+                    "column_name": "Category Ids",
                     "column_order": 1,
                     "example_values": [
                         "3, 4"
@@ -337,7 +329,7 @@
                     "contains": [
                         "ip"
                     ],
-                    "column_name": "ip",
+                    "column_name": "IP",
                     "column_order": 0,
                     "example_values": [
                         "8.8.8.8"
@@ -381,6 +373,16 @@
                     "example_values": [
                         1
                     ]
+                },
+                {
+                    "data_path": "action_result.data.*.data.ipAddress",
+                    "data_type": "string",
+                    "example_value": "8.8.8.8"
+                },
+                {
+                    "data_path": "action_result.data.*.data.abuseConfidenceScore",
+                    "data_type": "numeric",
+                    "example_value": 0
                 }
             ],
             "render": {
