@@ -268,7 +268,7 @@
             "action": "post ip",
             "identifier": "report_ip",
             "description": "Report an IP for abusive behavior",
-            "verbose": "Reports an IP given the categories. The categories can be found in <a href='https://www.abuseipdb.com/categories'>Report Categories</a>. There is a limit on reporting the same IP for an interval of <b>15 minutes</b>. There is a comment limit of <b>1024 characters</b>",
+            "verbose": "Reports an IP given the categories. The categories can be found in <a href='https://www.abuseipdb.com/categories'>Report Categories</a>. There is a limit on reporting the same IP for an interval of <b>15 minutes</b>. There is a comment limit of <b>1024 characters</b>.",
             "type": "generic",
             "read_only": false,
             "parameters": {
