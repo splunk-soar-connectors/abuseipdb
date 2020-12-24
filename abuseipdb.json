@@ -15,7 +15,7 @@
     "package_name": "phantom_abuseipdb",
     "main_module": "abuseipdb_connector.py",
     "min_phantom_version": "4.9.39220",
-    "latest_tested_versions": [""],
+    "latest_tested_versions": ["AbuseIPDB Cloud, 2020 on 12/22/2020"],
     "app_wizard_version": "1.0.0",
     "python_version": "3",
     "configuration": {
