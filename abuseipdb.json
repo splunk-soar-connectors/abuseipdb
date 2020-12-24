@@ -11,7 +11,7 @@
     "publisher": "Splunk",
     "license": "Copyright (c) 2017-2020 Splunk Inc.",
     "app_version": "2.0.0",
-    "utctime_updated": "2019-05-30T20:04:19.000000Z",
+    "utctime_updated": "2020-12-23T05:34:21.000000Z",
     "package_name": "phantom_abuseipdb",
     "main_module": "abuseipdb_connector.py",
     "min_phantom_version": "4.9.39220",
