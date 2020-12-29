@@ -10,12 +10,14 @@
     "product_version_regex": ".*",
     "publisher": "Splunk",
     "license": "Copyright (c) 2017-2020 Splunk Inc.",
-    "app_version": "2.0.0",
-    "utctime_updated": "2020-12-23T05:34:21.000000Z",
+    "app_version": "2.0.1",
+    "utctime_updated": "2020-12-29T12:38:16.000000Z",
     "package_name": "phantom_abuseipdb",
     "main_module": "abuseipdb_connector.py",
     "min_phantom_version": "4.9.39220",
-    "latest_tested_versions": ["AbuseIPDB Cloud, 2020 on 12/22/2020"],
+    "latest_tested_versions": [
+        "AbuseIPDB Cloud, 2020 on 12/22/2020"
+    ],
     "app_wizard_version": "1.0.0",
     "python_version": "3",
     "configuration": {
