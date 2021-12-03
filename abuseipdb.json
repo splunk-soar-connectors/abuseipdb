@@ -20,6 +20,7 @@
     ],
     "app_wizard_version": "1.0.0",
     "python_version": "3",
+    "fips_compliant": true,
     "configuration": {
         "api_key": {
             "description": "API Key",
