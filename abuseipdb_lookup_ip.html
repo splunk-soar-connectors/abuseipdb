@@ -118,7 +118,7 @@ and limitations under the License.
                 {% for item in result.data %}
 				<tr>
                 <td class="widget-td">
-                    {{ item.data.countryName }}   
+                    {{ item.data.countryName }}
                     </td>
 				<td class="widget-td">
                     <a href="javascript:;" onclick="context_menu(this, [{'contains': ['domain','url'],
@@ -130,19 +130,19 @@ and limitations under the License.
                     </a>
                 </td>
                 <td class="widget-td">
-                    {{ item.data.isPublic }}   
+                    {{ item.data.isPublic }}
                 </td>
                 <td class="widget-td">
-                    {{ item.data.lastReportedAt }}   
+                    {{ item.data.lastReportedAt }}
                 </td>
                 <td class="widget-td">
-                    {{ item.data.countryCode }}  
+                    {{ item.data.countryCode }}
                 </td>
                 <td class="widget-td">
-                    {{ item.data.isp }}   
+                    {{ item.data.isp }}
                 </td>
                 <td class="widget-td">
-                    {{ item.data.usageType }}   
+                    {{ item.data.usageType }}
                 </td>
                 <td>
                     <table class="phantom-table dataTable">
@@ -158,16 +158,16 @@ and limitations under the License.
                         {% for report in item.data.reports %}
                         <tr>
                         <td class="widget-td">
-                            {{ report.reporterId }}    
+                            {{ report.reporterId }}
                         </td>
                         <td class="widget-td">
-                            {{ report.reportedAt }}    
+                            {{ report.reportedAt }}
                         </td>
                         <td class="widget-td">
-                            {{ report.reporterCountryCode }}    
+                            {{ report.reporterCountryCode }}
                         </td>
                         <td class="widget-td">
-                            {{ report.reporterCountryName }}    
+                            {{ report.reporterCountryName }}
                         </td>
                         <td class="widget-td">
                             <ul>
@@ -177,12 +177,12 @@ and limitations under the License.
                             </ul>
                         </td>
                         <td class="widget-td">
-                            {{ report.comment }}  
+                            {{ report.comment }}
                         </td>
                         </tr>
                         {% endfor %}
                         </tbody>
-                    </table>        
+                    </table>
                 </td>
                 </tr>
                 {% endfor %}
