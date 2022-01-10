@@ -10,10 +10,18 @@
 {% block widget_content %} <!-- Main Start Block -->
 
 <!-- File: abuseipdb_lookup_ip.html
-  Copyright (c) 2017-2021 Splunk Inc.
+  Copyright (c) 2017-2022 Splunk Inc.
 
-  SPLUNK CONFIDENTIAL - Use or disclosure of this material in whole or in part
-  without a valid written license from Splunk Inc. is PROHIBITED.
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software distributed under
+the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
+either express or implied. See the License for the specific language governing permissions
+and limitations under the License.
 -->
 <style>
 
@@ -110,7 +118,7 @@
                 {% for item in result.data %}
 				<tr>
                 <td class="widget-td">
-                    {{ item.data.countryName }}   
+                    {{ item.data.countryName }}
                     </td>
 				<td class="widget-td">
                     <a href="javascript:;" onclick="context_menu(this, [{'contains': ['domain','url'],
@@ -122,19 +130,19 @@
                     </a>
                 </td>
                 <td class="widget-td">
-                    {{ item.data.isPublic }}   
+                    {{ item.data.isPublic }}
                 </td>
                 <td class="widget-td">
-                    {{ item.data.lastReportedAt }}   
+                    {{ item.data.lastReportedAt }}
                 </td>
                 <td class="widget-td">
-                    {{ item.data.countryCode }}  
+                    {{ item.data.countryCode }}
                 </td>
                 <td class="widget-td">
-                    {{ item.data.isp }}   
+                    {{ item.data.isp }}
                 </td>
                 <td class="widget-td">
-                    {{ item.data.usageType }}   
+                    {{ item.data.usageType }}
                 </td>
                 <td>
                     <table class="phantom-table dataTable">
@@ -150,16 +158,16 @@
                         {% for report in item.data.reports %}
                         <tr>
                         <td class="widget-td">
-                            {{ report.reporterId }}    
+                            {{ report.reporterId }}
                         </td>
                         <td class="widget-td">
-                            {{ report.reportedAt }}    
+                            {{ report.reportedAt }}
                         </td>
                         <td class="widget-td">
-                            {{ report.reporterCountryCode }}    
+                            {{ report.reporterCountryCode }}
                         </td>
                         <td class="widget-td">
-                            {{ report.reporterCountryName }}    
+                            {{ report.reporterCountryName }}
                         </td>
                         <td class="widget-td">
                             <ul>
@@ -169,12 +177,12 @@
                             </ul>
                         </td>
                         <td class="widget-td">
-                            {{ report.comment }}  
+                            {{ report.comment }}
                         </td>
                         </tr>
                         {% endfor %}
                         </tbody>
-                    </table>        
+                    </table>
                 </td>
                 </tr>
                 {% endfor %}

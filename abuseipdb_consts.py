@@ -1,11 +1,20 @@
 # File: abuseipdb_consts.py
-# Copyright (c) 2017-2021 Splunk Inc.
 #
-# SPLUNK CONFIDENTIAL - Use or disclosure of this material in whole or in part
-# without a valid written license from Splunk Inc. is PROHIBITED.
-
+# Copyright (c) 2017-2022 Splunk Inc.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software distributed under
+# the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
+# either express or implied. See the License for the specific language governing permissions
+# and limitations under the License.
+#
+#
 # Define your constants here
-
 CATEGORIES = {
     "3": {
         "id": "3",
@@ -38,7 +47,8 @@ CATEGORIES = {
     "11": {
         "id": "11",
         "title": "Email Spam",
-        "description": ("Spam email content, infected attachments, phishing emails, and spoofed senders (typically via exploited host or SMTP server abuse). Note: Limit comments "
+        "description": ("Spam email content, infected attachments, phishing emails, and spoofed senders "
+                        "(typically via exploited host or SMTP server abuse). Note: Limit comments "
                         "to only relevent information (instead of log dumps) and be sure to remove PII if you want to remain anonymous.")},
     "14": {
         "id": "14",
@@ -51,7 +61,9 @@ CATEGORIES = {
     "18": {
         "id": "18",
         "title": "Brute-Force",
-        "description": "Credential brute-force attacks on webpage logins and services like SSH, FTP, SIP, SMTP, RDP, etc. This category is seperate from DDoS attacks."},
+        "description": "Credential brute-force attacks on webpage logins and "
+                       "services like SSH, FTP, SIP, SMTP, RDP, etc. "
+                       "This category is seperate from DDoS attacks."},
     "19": {
         "id": "19",
         "title": "Bad Web Bot",
@@ -60,7 +72,8 @@ CATEGORIES = {
     "20": {
         "id": "20",
         "title": "Exploited Host",
-        "description": ("Host is likely infected with malware and being used for other attacks or to host malicious content. The host owner may not be aware of the compromise."
+        "description": ("Host is likely infected with malware and being used for other attacks or to host malicious content. "
+                        "The host owner may not be aware of the compromise."
                         " This category is often used in combination with other attack categories.")},
     "21": {
         "id": "21",
@@ -74,5 +87,6 @@ CATEGORIES = {
     "23": {
         "id": "23",
         "title": "IoT Targeted",
-        "description": "Abuse was targeted at an \"Internet of Things\" type device. Include information about what type of device was targeted in the comments."}
+        "description": "Abuse was targeted at an \"Internet of Things\" type device. "
+                       "Include information about what type of device was targeted in the comments."}
 }
