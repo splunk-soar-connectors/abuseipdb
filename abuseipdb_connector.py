@@ -1,6 +1,6 @@
 # File: abuseipdb_connector.py
 #
-# Copyright (c) 2017-2022 Splunk Inc.
+# Copyright (c) 2017-2023 Splunk Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -204,6 +204,7 @@ class AbuseipdbConnector(BaseConnector):
         summary = action_result.update_summary({})
         summary['reports_found'] = len(reports_list)
 
+        self.save_progress("IP lookup completed successfully.")
         message = "IP lookup complete. Reports found: {}".format(
             summary['reports_found'])
 
@@ -235,6 +236,7 @@ class AbuseipdbConnector(BaseConnector):
         summary['categories_filed'] = len(list_categories)
         summary['comment_length'] = len(comment)
 
+        self.save_progress("IP reported successfully.")
         message = "IP reported. Number of categories filed: {}, Comment length: {}".format(
             summary['categories_filed'],
             summary['comment_length'])
