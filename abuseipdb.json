@@ -49,12 +49,14 @@
             "read_only": true,
             "parameters": {
                 "ip": {
-                    "description": "IPv4 to query",
+                    "description": "IP to query",
                     "data_type": "string",
                     "required": true,
                     "primary": true,
                     "contains": [
-                        "ip"
+                        "ip",
+                        "ipv4",
+                        "ipv6"
                     ],
                     "order": 0
                 },
