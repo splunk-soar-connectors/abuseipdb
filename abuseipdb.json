@@ -87,7 +87,8 @@
                     "data_path": "action_result.parameter.ip",
                     "data_type": "string",
                     "example_values": [
-                        "8.8.8.8"
+                        "8.8.8.8",
+                        "2001:4860:4860::8888"
                     ],
                     "contains": [
                         "ip",

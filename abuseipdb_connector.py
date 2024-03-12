@@ -149,13 +149,6 @@ class AbuseipdbConnector(BaseConnector):
         url = "{}{}".format(self._base_url, endpoint)
 
         try:
-            self.debug_print("*"*50)
-            self.debug_print(f"URL ---> {url}")
-            self.debug_print(f"METHOD ---> {method}")
-            self.debug_print(f"HEADERS ---> {headers}")
-            self.debug_print(f"JSON ---> {json_data}")
-            self.debug_print(f"PARAM ---> {params}")
-            self.debug_print("*"*50)
             r = request_func(
                 url,
                 json=json_data,
