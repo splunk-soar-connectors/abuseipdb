@@ -1,6 +1,6 @@
 # File: abuseipdb_connector.py
 #
-# Copyright (c) 2017-2023 Splunk Inc.
+# Copyright (c) 2017-2024 Splunk Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -15,11 +15,12 @@
 #
 #
 # Phantom App imports
+import ipaddress
 import json
 
 import phantom.app as phantom
 import requests
-from bs4 import BeautifulSoup
+from bs4 import BeautifulSoup, UnicodeDammit
 from phantom.action_result import ActionResult
 from phantom.base_connector import BaseConnector
 
@@ -35,6 +36,22 @@ class AbuseipdbConnector(BaseConnector):
 
         # Call the BaseConnectors init first
         super(AbuseipdbConnector, self).__init__()
+
+    def _is_ip(self, input_ip_address):
+        """ Function that checks given address and return True if address is valid IPv4 or IPV6 address.
+
+        :param input_ip_address: IP address
+        :return: status (success/failure)
+        """
+
+        ip_address_input = input_ip_address
+
+        try:
+            ipaddress.ip_address(UnicodeDammit(ip_address_input).unicode_markup)
+        except Exception:
+            return False
+
+        return True
 
     def _process_empty_response(self, response, action_result):
 
@@ -132,6 +149,13 @@ class AbuseipdbConnector(BaseConnector):
         url = "{}{}".format(self._base_url, endpoint)
 
         try:
+            self.debug_print("*"*50)
+            self.debug_print(f"URL ---> {url}")
+            self.debug_print(f"METHOD ---> {method}")
+            self.debug_print(f"HEADERS ---> {headers}")
+            self.debug_print(f"JSON ---> {json_data}")
+            self.debug_print(f"PARAM ---> {params}")
+            self.debug_print("*"*50)
             r = request_func(
                 url,
                 json=json_data,
@@ -276,6 +300,7 @@ class AbuseipdbConnector(BaseConnector):
         config = self.get_config()
 
         self._api_key = config['api_key']
+        self.set_validator('ipv6', self._is_ip)
 
         return phantom.APP_SUCCESS
 
@@ -289,6 +314,7 @@ class AbuseipdbConnector(BaseConnector):
 if __name__ == '__main__':
 
     import argparse
+    import sys
 
     import pudb
 
@@ -299,12 +325,14 @@ if __name__ == '__main__':
     argparser.add_argument('input_test_json', help='Input Test JSON file')
     argparser.add_argument('-u', '--username', help='username', required=False)
     argparser.add_argument('-p', '--password', help='password', required=False)
+    argparser.add_argument('-v', '--verify', action='store_true', help='verify', required=False, default=False)
 
     args = argparser.parse_args()
     session_id = None
 
     username = args.username
     password = args.password
+    verify = args.verify
 
     if (username is not None and password is None):
 
@@ -315,7 +343,7 @@ if __name__ == '__main__':
     if (username and password):
         try:
             print("Accessing the Login page")
-            r = requests.get(BaseConnector._get_phantom_base_url() + "login", verify=False)
+            r = requests.get(BaseConnector._get_phantom_base_url() + "login", verify=verify)
             csrftoken = r.cookies['csrftoken']
 
             data = dict()
@@ -328,11 +356,11 @@ if __name__ == '__main__':
             headers['Referer'] = BaseConnector._get_phantom_base_url() + "login"
 
             print("Logging into Platform to get the session id")
-            r2 = requests.post(BaseConnector._get_phantom_base_url() + "login", verify=False, data=data, headers=headers)
+            r2 = requests.post(BaseConnector._get_phantom_base_url() + "login", verify=verify, data=data, headers=headers)
             session_id = r2.cookies['sessionid']
         except Exception as e:
             print("Unable to get session id from the platform. Error: " + str(e))
-            exit(1)
+            sys.exit(1)
 
     with open(args.input_test_json) as f:
         in_json = f.read()
@@ -344,4 +372,4 @@ if __name__ == '__main__':
         ret_val = connector._handle_action(json.dumps(in_json), None)
         print(json.dumps(json.loads(ret_val), indent=4))
 
-    exit(0)
+    sys.exit(0)

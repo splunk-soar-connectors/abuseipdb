@@ -9,12 +9,12 @@
     "product_name": "AbuseIPDB",
     "product_version_regex": ".*",
     "publisher": "Splunk",
-    "license": "Copyright (c) 2017-2023 Splunk Inc.",
-    "app_version": "2.0.9",
+    "license": "Copyright (c) 2017-2024 Splunk Inc.",
+    "app_version": "2.1.0",
     "utctime_updated": "2022-01-10T20:37:49.000000Z",
     "package_name": "phantom_abuseipdb",
     "main_module": "abuseipdb_connector.py",
-    "min_phantom_version": "4.9.39220",
+    "min_phantom_version": "6.1.1",
     "latest_tested_versions": [
         "AbuseIPDB Cloud, 2020 on 12/22/2020"
     ],
@@ -49,13 +49,12 @@
             "read_only": true,
             "parameters": {
                 "ip": {
-                    "description": "IP to query",
+                    "description": "IPv4 or IPv6 to query",
                     "data_type": "string",
                     "required": true,
                     "primary": true,
                     "contains": [
                         "ip",
-                        "ipv4",
                         "ipv6"
                     ],
                     "order": 0
@@ -91,7 +90,8 @@
                         "8.8.8.8"
                     ],
                     "contains": [
-                        "ip"
+                        "ip",
+                        "ipv6"
                     ]
                 },
                 {
@@ -416,7 +416,7 @@
             },
             {
                 "module": "soupsieve",
-                "input_file": "wheels/py3/soupsieve-2.4.1-py3-none-any.whl"
+                "input_file": "wheels/py3/soupsieve-2.5-py3-none-any.whl"
             }
         ]
     }
