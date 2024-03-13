@@ -20,7 +20,7 @@ import json
 
 import phantom.app as phantom
 import requests
-from bs4 import BeautifulSoup, UnicodeDammit
+from bs4 import BeautifulSoup
 from phantom.action_result import ActionResult
 from phantom.base_connector import BaseConnector
 
@@ -47,7 +47,7 @@ class AbuseipdbConnector(BaseConnector):
         ip_address_input = input_ip_address
 
         try:
-            ipaddress.ip_address(UnicodeDammit(ip_address_input).unicode_markup)
+            ipaddress.ip_address(ip_address_input)
         except Exception:
             return False
 

@@ -128,10 +128,12 @@
                     "data_path": "action_result.data.*.data.ipAddress",
                     "data_type": "string",
                     "example_values": [
-                        "8.8.8.8"
+                        "8.8.8.8",
+                        "2001:4860:4860::8888"
                     ],
                     "contains": [
-                        "ip"
+                        "ip",
+                        "ipv6"
                     ]
                 },
                 {
@@ -279,12 +281,13 @@
             "read_only": false,
             "parameters": {
                 "ip": {
-                    "description": "IPv4 to report on",
+                    "description": "IPv4 or IPv6 to report on",
                     "data_type": "string",
                     "required": true,
                     "primary": true,
                     "contains": [
-                        "ip"
+                        "ip",
+                        "ipv6"
                     ],
                     "order": 0
                 },
@@ -333,12 +336,14 @@
                     "data_path": "action_result.parameter.ip",
                     "data_type": "string",
                     "contains": [
-                        "ip"
+                        "ip",
+                        "ipv6"
                     ],
                     "column_name": "IP",
                     "column_order": 0,
                     "example_values": [
-                        "8.8.8.8"
+                        "8.8.8.8",
+                        "2001:4860:4860::8888"
                     ]
                 },
                 {
@@ -383,7 +388,14 @@
                 {
                     "data_path": "action_result.data.*.data.ipAddress",
                     "data_type": "string",
-                    "example_value": "8.8.8.8"
+                    "contains": [
+                        "ip",
+                        "ipv6"
+                    ],
+                    "example_values": [
+                        "8.8.8.8",
+                        "2001:4860:4860::8888"
+                    ]
                 },
                 {
                     "data_path": "action_result.data.*.data.abuseConfidenceScore",
