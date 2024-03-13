@@ -45,7 +45,7 @@ The AbuseIPDB service has a limit of 1000 lookups per day.
 #### Action Parameters
 PARAMETER | REQUIRED | DESCRIPTION | TYPE | CONTAINS
 --------- | -------- | ----------- | ---- | --------
-**ip** |  required  | IPv4 to query | string |  `ip` 
+**ip** |  required  | IP to query | string |  `ip` 
 **days** |  required  | Check for IP Reports within this number of days | numeric | 
 
 #### Action Output
