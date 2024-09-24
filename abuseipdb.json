@@ -14,7 +14,7 @@
     "utctime_updated": "2022-01-10T20:37:49.000000Z",
     "package_name": "phantom_abuseipdb",
     "main_module": "abuseipdb_connector.py",
-    "min_phantom_version": "6.1.1",
+    "min_phantom_version": "6.2.1",
     "latest_tested_versions": [
         "AbuseIPDB Cloud, 2024 on 12/03/2024"
     ],
