@@ -37,17 +37,15 @@ class AbuseipdbConnector(BaseConnector):
         # Call the BaseConnectors init first
         super(AbuseipdbConnector, self).__init__()
 
-    def _is_ip(self, input_ip_address):
+    def _is_ip(self, input_ip_address: str) -> bool:
         """Function that checks given address and return True if address is valid IPv4 or IPV6 address.
 
         :param input_ip_address: IP address
         :return: status (success/failure)
         """
 
-        ip_address_input = input_ip_address
-
         try:
-            ipaddress.ip_address(ip_address_input)
+            ipaddress.ip_address(input_ip_address)
         except Exception:
             return False
 
