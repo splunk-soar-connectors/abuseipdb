@@ -38,7 +38,7 @@ class AbuseipdbConnector(BaseConnector):
         super(AbuseipdbConnector, self).__init__()
 
     def _is_ip(self, input_ip_address: str) -> bool:
-        """Function that checks given address and return True if address is valid IPv4 or IPV6 address.
+        """Function that checks given address and return True if address is valid IPV6 address.
 
         :param input_ip_address: IP address
         :return: status (success/failure)
