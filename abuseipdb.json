@@ -9,14 +9,14 @@
     "product_name": "AbuseIPDB",
     "product_version_regex": ".*",
     "publisher": "Splunk",
-    "license": "Copyright (c) 2017-2023 Splunk Inc.",
-    "app_version": "2.0.9",
+    "license": "Copyright (c) 2017-2024 Splunk Inc.",
+    "app_version": "2.1.0",
     "utctime_updated": "2022-01-10T20:37:49.000000Z",
     "package_name": "phantom_abuseipdb",
     "main_module": "abuseipdb_connector.py",
-    "min_phantom_version": "4.9.39220",
+    "min_phantom_version": "6.2.1",
     "latest_tested_versions": [
-        "AbuseIPDB Cloud, 2020 on 12/22/2020"
+        "AbuseIPDB Cloud, 2024 on 12/03/2024"
     ],
     "app_wizard_version": "1.0.0",
     "python_version": "3",
@@ -49,12 +49,13 @@
             "read_only": true,
             "parameters": {
                 "ip": {
-                    "description": "IPv4 to query",
+                    "description": "IPv4 or IPv6 to query",
                     "data_type": "string",
                     "required": true,
                     "primary": true,
                     "contains": [
-                        "ip"
+                        "ip",
+                        "ipv6"
                     ],
                     "order": 0
                 },
@@ -86,10 +87,12 @@
                     "data_path": "action_result.parameter.ip",
                     "data_type": "string",
                     "example_values": [
-                        "8.8.8.8"
+                        "8.8.8.8",
+                        "2001:4860:4860::8888"
                     ],
                     "contains": [
-                        "ip"
+                        "ip",
+                        "ipv6"
                     ]
                 },
                 {
@@ -125,10 +128,12 @@
                     "data_path": "action_result.data.*.data.ipAddress",
                     "data_type": "string",
                     "example_values": [
-                        "8.8.8.8"
+                        "8.8.8.8",
+                        "2001:4860:4860::8888"
                     ],
                     "contains": [
-                        "ip"
+                        "ip",
+                        "ipv6"
                     ]
                 },
                 {
@@ -276,12 +281,13 @@
             "read_only": false,
             "parameters": {
                 "ip": {
-                    "description": "IPv4 to report on",
+                    "description": "IPv4 or IPv6 to report on",
                     "data_type": "string",
                     "required": true,
                     "primary": true,
                     "contains": [
-                        "ip"
+                        "ip",
+                        "ipv6"
                     ],
                     "order": 0
                 },
@@ -330,12 +336,14 @@
                     "data_path": "action_result.parameter.ip",
                     "data_type": "string",
                     "contains": [
-                        "ip"
+                        "ip",
+                        "ipv6"
                     ],
                     "column_name": "IP",
                     "column_order": 0,
                     "example_values": [
-                        "8.8.8.8"
+                        "8.8.8.8",
+                        "2001:4860:4860::8888"
                     ]
                 },
                 {
@@ -380,7 +388,14 @@
                 {
                     "data_path": "action_result.data.*.data.ipAddress",
                     "data_type": "string",
-                    "example_value": "8.8.8.8"
+                    "contains": [
+                        "ip",
+                        "ipv6"
+                    ],
+                    "example_values": [
+                        "8.8.8.8",
+                        "2001:4860:4860::8888"
+                    ]
                 },
                 {
                     "data_path": "action_result.data.*.data.abuseConfidenceScore",
@@ -395,27 +410,9 @@
         }
     ],
     "pip_dependencies": {
-        "wheel": [
-            {
-                "module": "beautifulsoup4",
-                "input_file": "wheels/py3/beautifulsoup4-4.9.1-py3-none-any.whl"
-            },
-            {
-                "module": "soupsieve",
-                "input_file": "wheels/py3/soupsieve-2.3.2.post1-py3-none-any.whl"
-            }
-        ]
+        "wheel": []
     },
     "pip39_dependencies": {
-        "wheel": [
-            {
-                "module": "beautifulsoup4",
-                "input_file": "wheels/py3/beautifulsoup4-4.9.1-py3-none-any.whl"
-            },
-            {
-                "module": "soupsieve",
-                "input_file": "wheels/py3/soupsieve-2.4.1-py3-none-any.whl"
-            }
-        ]
+        "wheel": []
     }
 }
