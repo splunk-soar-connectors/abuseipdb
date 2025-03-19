@@ -9,7 +9,7 @@
     "product_name": "AbuseIPDB",
     "product_version_regex": ".*",
     "publisher": "Splunk",
-    "license": "Copyright (c) 2017-2024 Splunk Inc.",
+    "license": "Copyright (c) 2017-2025 Splunk Inc.",
     "app_version": "2.1.0",
     "utctime_updated": "2022-01-10T20:37:49.000000Z",
     "package_name": "phantom_abuseipdb",

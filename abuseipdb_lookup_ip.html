@@ -1,16 +1,17 @@
 {% extends 'widgets/widget_template.html' %}
 {% load custom_template %}
-
-{% block custom_title_prop %}{% if title_logo %}style="background-size: auto 60%; background-position: 50%; background-repeat: no-repeat; background-image: url('/app_resource/{{ title_logo }}');"{% endif %}{% endblock %}
+{% block custom_title_prop %}
+  {% if title_logo %}
+    style="background-size: auto 60%; background-position: 50%; background-repeat: no-repeat; background-image: url('/app_resource/{{ title_logo }}');"
+  {% endif %}
+{% endblock %}
 {% block title1 %}{{ title1 }}{% endblock %}
 {% block title2 %}{{ title2 }}{% endblock %}
-{% block custom_tools %}
-{% endblock %}
-
-{% block widget_content %} <!-- Main Start Block -->
-
-<!-- File: abuseipdb_lookup_ip.html
-  Copyright (c) 2017-2024 Splunk Inc.
+{% block custom_tools %}{% endblock %}
+{% block widget_content %}
+  <!-- Main Start Block -->
+  <!-- File: abuseipdb_lookup_ip.html
+  Copyright (c) 2017-2025 Splunk Inc.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -23,8 +24,7 @@ the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS
 either express or implied. See the License for the specific language governing permissions
 and limitations under the License.
 -->
-<style>
-
+  <style>
     .abuseipdb a:hover {
         text-decoration:underline;
     }
@@ -70,129 +70,105 @@ and limitations under the License.
     }
 
 
-</style>
-
-<div class="abuseipdb" style="overflow: auto; width: 100% height: 100%; padding-left:10px; padding-right:10px">
+  </style>
+  <div class="abuseipdb"
+       style="overflow: auto;
+              width: 100% height: 100%;
+              padding-left:10px;
+              padding-right:10px">
     <!-- Main Div -->
-
-    {% for result in results %} <!-- loop for each result -->
-    {% if not result.data %}
-    <h4 class="wf-h4-style">No data found</h4>
-    {% else %}
+    {% for result in results %}
+      <!-- loop for each result -->
+      {% if not result.data %}
+        <h4 class="wf-h4-style">No data found</h4>
+      {% else %}
         <div class="info">
-        <h4 class="wf-h4-style">Info</h4>
-        <table class="wf-table-vertical">
+          <h4 class="wf-h4-style">Info</h4>
+          <table class="wf-table-vertical">
             <tr>
-                <td>IP</td>
-                <td>
-                    <a href="javascript:;" onclick="context_menu(this, [{'contains': ['ip', 'ipv6'],
-                    'value':'{{ result.parameter.ip }}' }], 0,
-                    {{ container.id }}, null, false);">
-                        {{ result.param.ip }}
-                        &nbsp;
-                        <span class="fa fa-caret-down" style="font-size: smaller;"></span>
-                    </a>
-                </td>
+              <td>IP</td>
+              <td>
+                <a href="javascript:;"
+                   onclick="context_menu(this, [{'contains': ['ip', 'ipv6'], 'value':'{{ result.parameter.ip }}' }], 0, {{ container.id }}, null, false);">
+                  {{ result.param.ip }}
+                  &nbsp;
+                  <span class="fa fa-caret-down" style="font-size: smaller;"></span>
+                </a>
+              </td>
             </tr>
             <tr>
-                <td>Number of Days</td>
-                <td>{{ result.param.days }}</td>
+              <td>Number of Days</td>
+              <td>{{ result.param.days }}</td>
             </tr>
-        </table>
+          </table>
         </div>
-
         <div class="results">
-        <h4 class="wf-h4-style">Result</h4>
-            <table class="phantom-table dataTable">
-                <thead>
-                    <th class="widget-th">Country Name</th>
-                    <th class="widget-th">Domain</th>
-                    <th class="widget-th">Is Public</th>
-                    <th class="widget-th">Last Reported At</th>
-                    <th class="widget-th">Country Code</th>
-                    <th class="widget-th">ISP</th>
-                    <th class="widget-th">Usage Type</th>
-                    <th class="widget-th">Reports</th>
-                </thead>
-                <tbody>
-                {% for item in result.data %}
-				<tr>
-                <td class="widget-td">
-                    {{ item.data.countryName }}
-                    </td>
-				<td class="widget-td">
-                    <a href="javascript:;" onclick="context_menu(this, [{'contains': ['domain','url'],
-                        'value':'{{ item.data.domain }}' }], 0,
-                        {{ container.id }}, null, false);">
-                            {{ item.data.domain }}
-                            &nbsp;
-                            <span class="fa fa-caret-down" style="font-size: smaller;"></span>
+          <h4 class="wf-h4-style">Result</h4>
+          <table class="phantom-table dataTable">
+            <thead>
+              <th class="widget-th">Country Name</th>
+              <th class="widget-th">Domain</th>
+              <th class="widget-th">Is Public</th>
+              <th class="widget-th">Last Reported At</th>
+              <th class="widget-th">Country Code</th>
+              <th class="widget-th">ISP</th>
+              <th class="widget-th">Usage Type</th>
+              <th class="widget-th">Reports</th>
+            </thead>
+            <tbody>
+              {% for item in result.data %}
+                <tr>
+                  <td class="widget-td">{{ item.data.countryName }}</td>
+                  <td class="widget-td">
+                    <a href="javascript:;"
+                       onclick="context_menu(this, [{'contains': ['domain','url'], 'value':'{{ item.data.domain }}' }], 0, {{ container.id }}, null, false);">
+                      {{ item.data.domain }}
+                      &nbsp;
+                      <span class="fa fa-caret-down" style="font-size: smaller;"></span>
                     </a>
-                </td>
-                <td class="widget-td">
-                    {{ item.data.isPublic }}
-                </td>
-                <td class="widget-td">
-                    {{ item.data.lastReportedAt }}
-                </td>
-                <td class="widget-td">
-                    {{ item.data.countryCode }}
-                </td>
-                <td class="widget-td">
-                    {{ item.data.isp }}
-                </td>
-                <td class="widget-td">
-                    {{ item.data.usageType }}
-                </td>
-                <td>
+                  </td>
+                  <td class="widget-td">{{ item.data.isPublic }}</td>
+                  <td class="widget-td">{{ item.data.lastReportedAt }}</td>
+                  <td class="widget-td">{{ item.data.countryCode }}</td>
+                  <td class="widget-td">{{ item.data.isp }}</td>
+                  <td class="widget-td">{{ item.data.usageType }}</td>
+                  <td>
                     <table class="phantom-table dataTable">
-                        <thead>
-                            <th class="widget-th">Reporter ID</th>
-                            <th class="widget-th">Reported At</th>
-                            <th class="widget-th">Reporter Country Code</th>
-                            <th class="widget-th">Reporter Country Name</th>
-                            <th class="widget-th">Categories</th>
-                            <th class="widget-th">Comment</th>
-                        </thead>
-                        <tbody>
+                      <thead>
+                        <th class="widget-th">Reporter ID</th>
+                        <th class="widget-th">Reported At</th>
+                        <th class="widget-th">Reporter Country Code</th>
+                        <th class="widget-th">Reporter Country Name</th>
+                        <th class="widget-th">Categories</th>
+                        <th class="widget-th">Comment</th>
+                      </thead>
+                      <tbody>
                         {% for report in item.data.reports %}
-                        <tr>
-                        <td class="widget-td">
-                            {{ report.reporterId }}
-                        </td>
-                        <td class="widget-td">
-                            {{ report.reportedAt }}
-                        </td>
-                        <td class="widget-td">
-                            {{ report.reporterCountryCode }}
-                        </td>
-                        <td class="widget-td">
-                            {{ report.reporterCountryName }}
-                        </td>
-                        <td class="widget-td">
-                            <ul>
-                            {% for category in report.categories %}
-                                <li>{{ category }}</li>
-                            {% endfor %}
-                            </ul>
-                        </td>
-                        <td class="widget-td">
-                            {{ report.comment }}
-                        </td>
-                        </tr>
+                          <tr>
+                            <td class="widget-td">{{ report.reporterId }}</td>
+                            <td class="widget-td">{{ report.reportedAt }}</td>
+                            <td class="widget-td">{{ report.reporterCountryCode }}</td>
+                            <td class="widget-td">{{ report.reporterCountryName }}</td>
+                            <td class="widget-td">
+                              <ul>
+                                {% for category in report.categories %}<li>{{ category }}</li>{% endfor %}
+                              </ul>
+                            </td>
+                            <td class="widget-td">{{ report.comment }}</td>
+                          </tr>
                         {% endfor %}
-                        </tbody>
+                      </tbody>
                     </table>
-                </td>
+                  </td>
                 </tr>
-                {% endfor %}
-                </tbody>
-            </table>
+              {% endfor %}
+            </tbody>
+          </table>
         </div>
-	{% endif %}
+      {% endif %}
     {% endfor %}
-</div>
-<script>
+  </div>
+  <script>
 $.extend(true, $.fn.dataTable.defaults, {
     "searching": true,
     "bLengthChange": false,
@@ -211,6 +187,5 @@ $.extend(true, $.fn.dataTable.defaults, {
   });
   $('.dataTable').DataTable();
 
-</script>
-
+  </script>
 {% endblock %}
