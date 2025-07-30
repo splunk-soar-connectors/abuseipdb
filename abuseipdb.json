@@ -19,7 +19,7 @@
         "AbuseIPDB Cloud, 2024 on 12/03/2024"
     ],
     "app_wizard_version": "1.0.0",
-    "python_version": "3",
+    "python_version": ["3.9", "3.13"],
     "fips_compliant": true,
     "configuration": {
         "api_key": {
