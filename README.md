@@ -1,7 +1,7 @@
 # AbuseIPDB
 
 Publisher: Splunk \
-Connector Version: 2.1.1 \
+Connector Version: 2.1.2 \
 Product Vendor: AbuseIPDB \
 Product Name: AbuseIPDB \
 Minimum Product Version: 6.2.1
