@@ -9,7 +9,7 @@
     "product_name": "AbuseIPDB",
     "product_version_regex": ".*",
     "publisher": "Splunk",
-    "license": "Copyright (c) 2017-2025 Splunk Inc.",
+    "license": "Copyright (c) 2017-2026 Splunk Inc.",
     "app_version": "2.1.2",
     "utctime_updated": "2025-08-01T20:27:43.573968Z",
     "package_name": "phantom_abuseipdb",
@@ -408,5 +408,11 @@
             },
             "versions": "EQ(*)"
         }
-    ]
+    ],
+    "pip39_dependencies": {
+        "wheel": []
+    },
+    "pip313_dependencies": {
+        "wheel": []
+    }
 }

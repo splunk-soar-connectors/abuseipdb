@@ -1,9 +1,9 @@
 # AbuseIPDB
 
-Publisher: Splunk \
-Connector Version: 2.1.2 \
-Product Vendor: AbuseIPDB \
-Product Name: AbuseIPDB \
+Publisher: Splunk <br>
+Connector Version: 2.1.2 <br>
+Product Vendor: AbuseIPDB <br>
+Product Name: AbuseIPDB <br>
 Minimum Product Version: 6.2.1
 
 This app integrates with AbuseIPDB to perform investigative actions
@@ -18,15 +18,15 @@ VARIABLE | REQUIRED | TYPE | DESCRIPTION
 
 ### Supported Actions
 
-[test connectivity](#action-test-connectivity) - Validate the asset configuration for connectivity using supplied configuration \
-[lookup ip](#action-lookup-ip) - Queries IP info \
+[test connectivity](#action-test-connectivity) - Validate the asset configuration for connectivity using supplied configuration <br>
+[lookup ip](#action-lookup-ip) - Queries IP info <br>
 [post ip](#action-post-ip) - Report an IP for abusive behavior
 
 ## action: 'test connectivity'
 
 Validate the asset configuration for connectivity using supplied configuration
 
-Type: **test** \
+Type: **test** <br>
 Read only: **True**
 
 #### Action Parameters
@@ -41,7 +41,7 @@ No Output
 
 Queries IP info
 
-Type: **investigate** \
+Type: **investigate** <br>
 Read only: **True**
 
 The AbuseIPDB service has a limit of 1000 lookups per day.
@@ -88,7 +88,7 @@ action_result.data.\*.data.numDistinctUsers | numeric | | |
 
 Report an IP for abusive behavior
 
-Type: **generic** \
+Type: **generic** <br>
 Read only: **False**
 
 Reports an IP given the categories. The categories can be found in <a href='https://www.abuseipdb.com/categories'>Report Categories</a>. There is a limit on reporting the same IP for an interval of <b>15 minutes</b>. There is a comment limit of <b>1024 characters</b>.
@@ -122,7 +122,7 @@ ______________________________________________________________________
 
 Auto-generated Splunk SOAR Connector documentation.
 
-Copyright 2025 Splunk Inc.
+Copyright 2026 Splunk Inc.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
