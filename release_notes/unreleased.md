@@ -1,3 +1,1 @@
 **Unreleased**
-
-* Escaped IP and domain values before inserting them into AbuseIPDB widget JavaScript contexts [PAPP-37945, PSAAS-30822].
