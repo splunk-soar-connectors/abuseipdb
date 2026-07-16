@@ -11,7 +11,7 @@
 {% block widget_content %}
   <!-- Main Start Block -->
   <!-- File: abuseipdb_lookup_ip.html
-  Copyright (c) 2017-2025 Splunk Inc.
+  Copyright (c) 2017-2026 Splunk Inc.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -89,7 +89,7 @@ and limitations under the License.
               <td>IP</td>
               <td>
                 <a href="javascript:;"
-                   onclick="context_menu(this, [{'contains': ['ip', 'ipv6'], 'value':'{{ result.parameter.ip }}' }], 0, {{ container.id }}, null, false);">
+                   onclick="context_menu(this, [{'contains': ['ip', 'ipv6'], 'value':'{{ result.parameter.ip|escapejs }}' }], 0, {{ container.id }}, null, false);">
                   {{ result.param.ip }}
                   &nbsp;
                   <span class="fa fa-caret-down" style="font-size: smaller;"></span>
@@ -121,7 +121,7 @@ and limitations under the License.
                   <td class="widget-td">{{ item.data.countryName }}</td>
                   <td class="widget-td">
                     <a href="javascript:;"
-                       onclick="context_menu(this, [{'contains': ['domain','url'], 'value':'{{ item.data.domain }}' }], 0, {{ container.id }}, null, false);">
+                       onclick="context_menu(this, [{'contains': ['domain','url'], 'value':'{{ item.data.domain|escapejs }}' }], 0, {{ container.id }}, null, false);">
                       {{ item.data.domain }}
                       &nbsp;
                       <span class="fa fa-caret-down" style="font-size: smaller;"></span>

@@ -1,6 +1,6 @@
 # File: abuseipdb_connector.py
 #
-# Copyright (c) 2017-2025 Splunk Inc.
+# Copyright (c) 2017-2026 Splunk Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -166,7 +166,7 @@ class AbuseipdbConnector(BaseConnector):
         data = {"ip": ip, "categories": categories, "comment": comment}
 
         # make rest call
-        ret_val, response = self._make_rest_call("/report", action_result, json_data=data, params=None, headers=None)
+        ret_val, _response = self._make_rest_call("/report", action_result, json_data=data, params=None, headers=None)
 
         if phantom.is_fail(ret_val):
             # the call to the 3rd party device or service failed, action result should contain all the error details
