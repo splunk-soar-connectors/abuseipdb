@@ -15,7 +15,7 @@ from soar_sdk.app import App
 
 from .actions import register_actions
 from .actions.make_request import make_request
-from .actions.test_connectivity import test_connectivity
+from .actions.connectivity import test_connectivity
 from .asset import Asset
 
 
