@@ -12,7 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 import ipaddress
-from html.parser import HTMLParser
 
 import httpx
 from soar_sdk.abstract import SOARClient
@@ -21,17 +20,9 @@ from soar_sdk.exceptions import ActionFailure
 from soar_sdk.params import Param, Params
 
 from ..asset import Asset
+from .utils import html_error_text
 
 BASE_URL = "https://api.abuseipdb.com/api/v2"
-
-
-class _HTMLTextParser(HTMLParser):
-    def __init__(self) -> None:
-        super().__init__()
-        self.text_parts: list[str] = []
-
-    def handle_data(self, data: str) -> None:
-        self.text_parts.append(data)
 
 
 class ReportIpParams(Params):
@@ -47,9 +38,12 @@ class ReportIpParams(Params):
 class ReportIpData(ActionOutput):
     ipAddress: str | None = OutputField(
         cef_types=["ip", "ipv6"],
+        column_name="IP",
         example_values=["8.8.8.8", "2001:4860:4860::8888"],
     )
-    abuseConfidenceScore: int | None = OutputField(example_values=[0])
+    abuseConfidenceScore: int | None = OutputField(
+        example_values=[0], column_name="Abuse Confidence Score"
+    )
 
 
 class ReportIpOutput(ActionOutput):
@@ -107,14 +101,11 @@ def report_ip(
         if not isinstance(raw_response, dict):
             raise ActionFailure("Unable to parse JSON response.")
     elif "html" in content_type:
-        parser = _HTMLTextParser()
-        parser.feed(response.text)
-        lines = [part.strip() for part in "".join(parser.text_parts).split("\n")]
-        error_text = "\n".join(line for line in lines if line)
+        error_text = html_error_text(response.text)
         message = (
             f"Status Code: {response.status_code}. Data from server:\n{error_text}\n"
         )
-        raise ActionFailure(message.replace("{", "{{").replace("}", "}}"))
+        raise ActionFailure(message)
     elif not response.text:
         if response.status_code != 200:
             raise ActionFailure("Empty response and no information in the header")

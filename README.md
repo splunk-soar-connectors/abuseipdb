@@ -112,9 +112,11 @@ action_result.data.\*.data.abuseConfidenceScore | numeric | | 0 |
 action_result.data.\*.data.countryCode | string | | US |
 action_result.data.\*.data.countryName | string | | United States |
 action_result.data.\*.data.domain | string | `domain` `url` | |
+action_result.data.\*.data.hostnames.\* | string | | |
 action_result.data.\*.data.ipAddress | string | `ip` `ipv6` | 8.8.8.8 2001:4860:4860::8888 |
 action_result.data.\*.data.ipVersion | numeric | | 4 |
 action_result.data.\*.data.isPublic | boolean | | True False |
+action_result.data.\*.data.isTor | boolean | | True False |
 action_result.data.\*.data.isWhitelisted | boolean | | True False |
 action_result.data.\*.data.isp | string | | Private IP Address LAN |
 action_result.data.\*.data.lastReportedAt | string | | 2019-05-21T10:18:49+01:00 |

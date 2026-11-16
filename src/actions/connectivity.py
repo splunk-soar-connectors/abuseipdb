@@ -11,24 +11,15 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-from html.parser import HTMLParser
 
 import httpx
 from soar_sdk.abstract import SOARClient
 from soar_sdk.exceptions import ActionFailure
 
 from ..asset import Asset
+from .utils import html_error_text
 
 BASE_URL = "https://api.abuseipdb.com/api/v2"
-
-
-class _HTMLTextParser(HTMLParser):
-    def __init__(self) -> None:
-        super().__init__()
-        self.text_parts: list[str] = []
-
-    def handle_data(self, data: str) -> None:
-        self.text_parts.append(data)
 
 
 def test_connectivity(soar: SOARClient, asset: Asset) -> None:
@@ -70,14 +61,11 @@ def test_connectivity(soar: SOARClient, asset: Asset) -> None:
         return
 
     if "html" in content_type:
-        parser = _HTMLTextParser()
-        parser.feed(response.text)
-        lines = [part.strip() for part in "".join(parser.text_parts).split("\n")]
-        error_text = "\n".join(line for line in lines if line)
+        error_text = html_error_text(response.text)
         message = (
             f"Status Code: {response.status_code}. Data from server:\n{error_text}\n"
         )
-        raise ActionFailure(message.replace("{", "{{").replace("}", "}}"))
+        raise ActionFailure(message)
 
     if not response.text:
         if response.status_code == 200:
