@@ -65,12 +65,14 @@ class LookupIpData(ActionOutput):
     countryCode: str | None = OutputField(example_values=["US"])
     countryName: str | None = OutputField(example_values=["United States"])
     domain: str | None = OutputField(cef_types=["domain", "url"])
+    hostnames: list[str] | None = OutputField()
     ipAddress: str | None = OutputField(
         cef_types=["ip", "ipv6"],
         example_values=["8.8.8.8", "2001:4860:4860::8888"],
     )
     ipVersion: int | None = OutputField(example_values=[4])
     isPublic: bool | None = OutputField()
+    isTor: bool | None = OutputField()
     isWhitelisted: bool | None = OutputField()
     isp: str | None = OutputField(example_values=["Private IP Address LAN"])
     lastReportedAt: str | None = OutputField(
