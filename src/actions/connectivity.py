@@ -17,16 +17,18 @@ from soar_sdk.abstract import SOARClient
 from soar_sdk.exceptions import ActionFailure
 
 from ..asset import Asset
+from ..auth import create_auth
 from .utils import html_error_text
 
 BASE_URL = "https://api.abuseipdb.com/api/v2"
 
 
 def test_connectivity(soar: SOARClient, asset: Asset) -> None:
-    headers = {"key": asset.api_key, "accept": "application/json"}
+    headers = {"accept": "application/json"}
     body = {"ip": "127.0.0.1", "categories": "4", "comment": "Test Connectivity"}
     try:
         with httpx.Client(
+            auth=create_auth(asset.api_key),
             headers=headers,
             timeout=None,  # noqa: S113 - preserve the legacy no-timeout behavior.
             follow_redirects=True,

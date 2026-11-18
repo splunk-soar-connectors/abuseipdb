@@ -20,6 +20,7 @@ from soar_sdk.exceptions import ActionFailure
 from soar_sdk.params import Param, Params
 
 from ..asset import Asset
+from ..auth import create_auth
 from .utils import html_error_text
 
 BASE_URL = "https://api.abuseipdb.com/api/v2"
@@ -102,10 +103,11 @@ def lookup_ip(
     except ValueError as error:
         raise ActionFailure(f"Invalid IP address: {params.ip}") from error
 
-    headers = {"key": asset.api_key, "accept": "application/json"}
+    headers = {"accept": "application/json"}
     query = {"ipAddress": params.ip, "maxAgeInDays": params.days, "verbose": "yes"}
     try:
         with httpx.Client(
+            auth=create_auth(asset.api_key),
             headers=headers,
             timeout=None,  # noqa: S113 - preserve the legacy no-timeout behavior.
             follow_redirects=True,

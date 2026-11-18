@@ -22,6 +22,7 @@ from soar_sdk.exceptions import ActionFailure
 from soar_sdk.params import MakeRequestParams
 
 from ..asset import Asset
+from ..auth import create_auth
 
 BASE_URL = "https://api.abuseipdb.com/api/v2/"
 
@@ -55,7 +56,7 @@ def make_request(params: MakeRequestParams, asset: Asset) -> MakeRequestOutput:
             }
         )
     # Keep the configured API key and JSON response preference authoritative.
-    headers.update({"key": asset.api_key, "accept": "application/json"})
+    headers.update({"accept": "application/json"})
 
     query_parameters: str | dict[str, object] | None = None
     if params.query_parameters:
@@ -85,6 +86,7 @@ def make_request(params: MakeRequestParams, asset: Asset) -> MakeRequestOutput:
     try:
         with httpx.Client(
             base_url=BASE_URL,
+            auth=create_auth(asset.api_key),
             verify=params.verify_ssl,
             timeout=params.timeout,
             follow_redirects=True,

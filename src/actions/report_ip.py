@@ -20,6 +20,7 @@ from soar_sdk.exceptions import ActionFailure
 from soar_sdk.params import Param, Params
 
 from ..asset import Asset
+from ..auth import create_auth
 from .utils import html_error_text
 
 BASE_URL = "https://api.abuseipdb.com/api/v2"
@@ -67,10 +68,11 @@ def report_ip(
 
     categories = ",".join(filter(None, params.category_ids.split(",")))
     comment = params.comment or ""
-    headers = {"key": asset.api_key, "accept": "application/json"}
+    headers = {"accept": "application/json"}
     body = {"ip": params.ip, "categories": categories, "comment": comment}
     try:
         with httpx.Client(
+            auth=create_auth(asset.api_key),
             headers=headers,
             timeout=None,  # noqa: S113 - preserve the legacy no-timeout behavior.
             follow_redirects=True,
