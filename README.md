@@ -121,6 +121,7 @@ action_result.data.\*.data.isWhitelisted | boolean | | True False |
 action_result.data.\*.data.isp | string | | Private IP Address LAN |
 action_result.data.\*.data.lastReportedAt | string | | 2019-05-21T10:18:49+01:00 |
 action_result.data.\*.data.reports.\*.categories.\* | numeric | | 3 |
+action_result.data.\*.data.reports.\*.categoriesDisplay | string | | |
 action_result.data.\*.data.reports.\*.comment | string | | Secure Shell (SSH) abuse. This category in combination with more specific categories. |
 action_result.data.\*.data.reports.\*.reportedAt | string | | 2019-05-21T10:18:49+01:00 |
 action_result.data.\*.data.reports.\*.reporterCountryCode | string | | US |

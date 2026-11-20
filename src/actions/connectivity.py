@@ -13,12 +13,13 @@
 # limitations under the License.
 
 import httpx
+from soar_sdk.shims.phantom.install_info import is_onprem_broker_install
 from soar_sdk.abstract import SOARClient
 from soar_sdk.exceptions import ActionFailure
 
 from ..asset import Asset
 from ..auth import create_auth
-from .utils import html_error_text
+from ..network import get_proxy_options, get_tls_verification
 
 BASE_URL = "https://api.abuseipdb.com/api/v2"
 
@@ -30,6 +31,10 @@ def test_connectivity(soar: SOARClient, asset: Asset) -> None:
         with httpx.Client(
             auth=create_auth(asset.api_key),
             headers=headers,
+            verify=get_tls_verification(),
+            **get_proxy_options(
+                f"{BASE_URL}/report", broker_mode=is_onprem_broker_install()
+            ),
             timeout=None,  # noqa: S113 - preserve the legacy no-timeout behavior.
             follow_redirects=True,
         ) as client:
@@ -43,39 +48,17 @@ def test_connectivity(soar: SOARClient, asset: Asset) -> None:
     if response.status_code == 429:
         return
 
-    content_type = response.headers.get("Content-Type", "")
-    if "json" in content_type:
-        try:
-            response.json()
-        except Exception as error:
-            raise ActionFailure(
-                f"Unable to parse JSON response. Error: {error!s}"
-            ) from error
-        try:
-            response.raise_for_status()
-        except httpx.HTTPStatusError as error:
-            if not 200 <= response.status_code < 399:
-                response_text = response.text.replace("{", "{{").replace("}", "}}")
-                raise ActionFailure(
-                    "Error from server. Status Code: "
-                    f"{response.status_code} Data from server: {response_text}"
-                ) from error
-        return
+    try:
+        response.raise_for_status()
+    except httpx.HTTPStatusError as error:
+        body = response.text.replace("{", "{{").replace("}", "}}")
+        raise ActionFailure(
+            f"Error from server. Status Code: {response.status_code} Data from server: {body}"
+        ) from error
 
-    if "html" in content_type:
-        error_text = html_error_text(response.text)
-        message = (
-            f"Status Code: {response.status_code}. Data from server:\n{error_text}\n"
-        )
-        raise ActionFailure(message)
-
-    if not response.text:
-        if response.status_code == 200:
-            return
-        raise ActionFailure("Empty response and no information in the header")
-
-    response_text = response.text.replace("{", "{{").replace("}", "}}")
-    raise ActionFailure(
-        "Can't process response from server. Status Code: "
-        f"{response.status_code} Data from server: {response_text}"
-    )
+    try:
+        response.json()
+    except ValueError as error:
+        raise ActionFailure(
+            f"Unable to parse JSON response. Error: {error!s}"
+        ) from error
