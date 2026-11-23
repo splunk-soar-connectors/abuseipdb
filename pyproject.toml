@@ -1,6 +1,6 @@
 [project]
 name = "abuseipdb"
-version = "2.1.3"
+version = "3.0.0"
 description = "This app integrates with AbuseIPDB to perform investigative actions"
 license = "Copyright (c) 2017-2026 Splunk Inc."
 requires-python = ">=3.13, <3.14"
