@@ -15,9 +15,11 @@
 
 import os
 import ssl
+from contextlib import suppress
 from datetime import UTC, datetime, timedelta
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from threading import Thread
+from time import sleep
 
 import pytest
 from cryptography import x509
@@ -129,12 +131,17 @@ def loopback_service(tmp_path):
                 }
             )
             payload = response["body"]
+            sleep(response.get("delay", 0))
             self.send_response(response["status"])
             self.send_header("Content-Type", response["content_type"])
             self.send_header("Content-Length", str(len(payload)))
             self.send_header("Connection", "close")
+            for name, value in response.get("headers", {}).items():
+                self.send_header(name, value)
             self.end_headers()
-            self.wfile.write(payload)
+            # Timeout tests close the real client before the server responds.
+            with suppress(BrokenPipeError, ConnectionResetError, ssl.SSLError):
+                self.wfile.write(payload)
 
         do_POST = do_GET
 

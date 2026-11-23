@@ -88,6 +88,7 @@ def make_request(params: MakeRequestParams, asset: Asset) -> MakeRequestOutput:
 
         if params.timeout is not None and params.timeout <= 0:
             raise ActionFailure("The timeout parameter must be greater than zero")
+        request_timeout = params.timeout if params.timeout is not None else 30
 
         try:
             with httpx.Client(
@@ -95,7 +96,7 @@ def make_request(params: MakeRequestParams, asset: Asset) -> MakeRequestOutput:
                 auth=create_auth(asset.api_key),
                 verify=get_tls_verification(params.verify_ssl),
                 **get_proxy_options(BASE_URL, broker_mode=is_onprem_broker_install()),
-                timeout=params.timeout,
+                timeout=request_timeout,
                 follow_redirects=True,
             ) as client:
                 request_options: dict[str, Any] = {
@@ -114,6 +115,10 @@ def make_request(params: MakeRequestParams, asset: Asset) -> MakeRequestOutput:
                 with suppress(httpx.HTTPStatusError):
                     response.raise_for_status()
                     # Make Request returns the vendor response for HTTP status errors.
+        except httpx.TimeoutException as error:
+            raise ActionFailure(
+                f"Request timed out after {request_timeout} seconds of network inactivity"
+            ) from error
         except httpx.HTTPError as error:
             safe_error = str(error)
             if asset.api_key:

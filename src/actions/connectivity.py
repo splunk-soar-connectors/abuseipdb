@@ -16,6 +16,7 @@ import httpx
 from soar_sdk.shims.phantom.install_info import is_onprem_broker_install
 from soar_sdk.abstract import SOARClient
 from soar_sdk.exceptions import ActionFailure
+from soar_sdk.logging import info
 
 from ..asset import Asset
 from ..auth import create_auth
@@ -25,6 +26,8 @@ BASE_URL = "https://api.abuseipdb.com/api/v2"
 
 
 def test_connectivity(soar: SOARClient, asset: Asset) -> None:
+    if asset.request_timeout <= 0:
+        raise ActionFailure("The request_timeout setting must be greater than zero")
     headers = {"accept": "application/json"}
     body = {"ip": "127.0.0.1", "categories": "4", "comment": "Test Connectivity"}
     try:
@@ -35,17 +38,63 @@ def test_connectivity(soar: SOARClient, asset: Asset) -> None:
             **get_proxy_options(
                 f"{BASE_URL}/report", broker_mode=is_onprem_broker_install()
             ),
-            timeout=None,  # noqa: S113 - preserve the legacy no-timeout behavior.
+            timeout=asset.request_timeout,
             follow_redirects=True,
         ) as client:
             response = client.post(f"{BASE_URL}/report", json=body)
+    except httpx.TimeoutException as error:
+        raise ActionFailure(
+            f"Request timed out after {asset.request_timeout} seconds of network inactivity"
+        ) from error
     except httpx.HTTPError as error:
         raise ActionFailure(
             f"Error Connecting to server. Details: {error!s}"
         ) from error
 
-    # AbuseIPDB rejects a repeat test report for the same IP within 15 minutes.
+    # A throttled request still passes connectivity. Persist the limitation in
+    # the native UI progress stream; SDK warning-level logs are not UI messages.
     if response.status_code == 429:
+        try:
+            error_response = response.json()
+        except ValueError:
+            error_response = {}
+        errors = (
+            error_response.get("errors", []) if isinstance(error_response, dict) else []
+        )
+        details = (
+            [
+                error["detail"].lower()
+                for error in errors
+                if isinstance(error, dict) and isinstance(error.get("detail"), str)
+            ]
+            if isinstance(errors, list)
+            else []
+        )
+        if any(
+            "daily rate limit" in detail and "exceeded" in detail for detail in details
+        ):
+            warning = (
+                "Warning: Connectivity test passed, but the daily report quota is exhausted. "
+                "Reporting is unavailable until the quota resets."
+            )
+        elif any(
+            "same ip address" in detail and "once in 15 minutes" in detail
+            for detail in details
+        ):
+            warning = (
+                "Warning: Connectivity test passed, but the test report was rejected "
+                "because this IP was reported within the last 15 minutes."
+            )
+        else:
+            warning = (
+                "Warning: Connectivity test passed with HTTP 429 (Too Many Requests). "
+                "The service is reachable, but this response does not confirm "
+                "authentication or reporting permissions."
+            )
+        retry_after = response.headers.get("Retry-After", "")
+        if retry_after.isascii() and retry_after.isdecimal():
+            warning += f" Retry after {retry_after} seconds."
+        info(warning)
         return
 
     try:

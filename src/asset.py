@@ -20,3 +20,9 @@ class Asset(BaseAsset):
         sensitive=True,
         category=FieldCategory.CONNECTIVITY,
     )
+    request_timeout: int = AssetField(
+        description="Test Connectivity request timeout in seconds (greater than zero)",
+        required=False,
+        default=30,
+        category=FieldCategory.CONNECTIVITY,
+    )

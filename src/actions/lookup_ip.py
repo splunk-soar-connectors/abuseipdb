@@ -38,6 +38,11 @@ class LookupIpParams(Params):
         default=10,
         column_name="Days",
     )
+    request_timeout: int = Param(
+        description="Network inactivity timeout in seconds (greater than zero)",
+        required=False,
+        default=30,
+    )
 
 
 class ReportOutput(ActionOutput):
@@ -121,6 +126,10 @@ def lookup_ip(
     # Keep the typed success annotation for schemas and native rendering; use
     # the SDK's ActionResult compatibility path only for expected failures.
     try:
+        if params.request_timeout <= 0:
+            raise ActionFailure(
+                "The request_timeout parameter must be greater than zero"
+            )
         try:
             ipaddress.ip_address(params.ip)
         except ValueError as error:
@@ -136,10 +145,14 @@ def lookup_ip(
                 **get_proxy_options(
                     f"{BASE_URL}/check", broker_mode=is_onprem_broker_install()
                 ),
-                timeout=None,  # noqa: S113 - preserve the legacy no-timeout behavior.
+                timeout=params.request_timeout,
                 follow_redirects=True,
             ) as client:
                 response = client.get(f"{BASE_URL}/check", params=query)
+        except httpx.TimeoutException as error:
+            raise ActionFailure(
+                f"Request timed out after {params.request_timeout} seconds of network inactivity"
+            ) from error
         except httpx.HTTPError as error:
             raise ActionFailure(
                 f"Error Connecting to server. Details: {error!s}"

@@ -35,6 +35,11 @@ class ReportIpParams(Params):
     )
     category_ids: str = Param(description="Comma delineated list of category IDs")
     comment: str | None = Param(description="Description of malicious activity")
+    request_timeout: int = Param(
+        description="Network inactivity timeout in seconds (greater than zero)",
+        required=False,
+        default=30,
+    )
 
 
 class ReportIpData(ActionOutput):
@@ -66,6 +71,10 @@ def report_ip(
     # Keep the typed success annotation for schemas and native rendering; use
     # the SDK's ActionResult compatibility path only for expected failures.
     try:
+        if params.request_timeout <= 0:
+            raise ActionFailure(
+                "The request_timeout parameter must be greater than zero"
+            )
         try:
             ipaddress.ip_address(params.ip)
         except ValueError as error:
@@ -83,10 +92,14 @@ def report_ip(
                 **get_proxy_options(
                     f"{BASE_URL}/report", broker_mode=is_onprem_broker_install()
                 ),
-                timeout=None,  # noqa: S113 - preserve the legacy no-timeout behavior.
+                timeout=params.request_timeout,
                 follow_redirects=True,
             ) as client:
                 response = client.post(f"{BASE_URL}/report", json=body)
+        except httpx.TimeoutException as error:
+            raise ActionFailure(
+                f"Request timed out after {params.request_timeout} seconds of network inactivity"
+            ) from error
         except httpx.HTTPError as error:
             raise ActionFailure(
                 f"Error Connecting to server. Details: {error!s}"

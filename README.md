@@ -8,6 +8,19 @@ Minimum Product Version: 7.0.0
 
 This app integrates with AbuseIPDB to perform investigative actions
 
+Requests use a 30-second network inactivity timeout by default. Lookup IP and
+Post IP accept an optional `request_timeout` action parameter. Test Connectivity
+uses the asset's `request_timeout` setting. Make Request uses its native `timeout`
+parameter, falling back to 30 seconds when omitted. Overrides must be positive
+whole numbers in seconds. These timeouts limit individual network waits, not
+the total duration of an action.
+
+Test Connectivity passes when AbuseIPDB responds with HTTP 429, while displaying
+a persistent warning about duplicate reporting, daily quota exhaustion, or
+unrecognized throttling. A numeric `Retry-After` value is shown when supplied.
+An unrecognized 429 confirms reachability, but does not confirm authentication
+or reporting permissions. Lookup IP and Post IP continue to fail on HTTP 429.
+
 ### Configuration variables
 
 This table lists the configuration variables required to operate AbuseIPDB. These variables are specified when configuring a AbuseIPDB asset in Splunk SOAR.
@@ -15,6 +28,7 @@ This table lists the configuration variables required to operate AbuseIPDB. Thes
 VARIABLE | REQUIRED | TYPE | DESCRIPTION
 -------- | -------- | ---- | -----------
 **api_key** | required | password | API Key |
+**request_timeout** | optional | numeric | Test Connectivity request timeout in seconds (greater than zero) |
 
 ### Supported Actions
 
@@ -91,7 +105,7 @@ Queries IP info
 Type: **investigate** <br>
 Read only: **True**
 
-The AbuseIPDB service has a limit of 1000 lookups per day.
+Daily lookup limits depend on your AbuseIPDB subscription plan. See the <a href='https://docs.abuseipdb.com/#api-daily-rate-limits'>AbuseIPDB API documentation</a> for current quotas.
 
 #### Action Parameters
 
@@ -99,6 +113,7 @@ PARAMETER | REQUIRED | DESCRIPTION | TYPE | CONTAINS
 --------- | -------- | ----------- | ---- | --------
 **ip** | required | IPv4 or IPv6 to query | string | `ip` `ipv6` |
 **days** | required | Check for IP Reports within this number of days | numeric | |
+**request_timeout** | optional | Network inactivity timeout in seconds (greater than zero) | numeric | |
 
 #### Action Output
 
@@ -108,6 +123,7 @@ action_result.status | string | | success failure |
 action_result.message | string | | |
 action_result.parameter.ip | string | `ip` `ipv6` | |
 action_result.parameter.days | numeric | | |
+action_result.parameter.request_timeout | numeric | | |
 action_result.data.\*.data.abuseConfidenceScore | numeric | | 0 |
 action_result.data.\*.data.countryCode | string | | US |
 action_result.data.\*.data.countryName | string | | United States |
@@ -150,6 +166,7 @@ PARAMETER | REQUIRED | DESCRIPTION | TYPE | CONTAINS
 **ip** | required | IPv4 or IPv6 to report on | string | `ip` `ipv6` |
 **category_ids** | required | Comma delineated list of category IDs | string | |
 **comment** | optional | Description of malicious activity | string | |
+**request_timeout** | optional | Network inactivity timeout in seconds (greater than zero) | numeric | |
 
 #### Action Output
 
@@ -160,6 +177,7 @@ action_result.message | string | | |
 action_result.parameter.ip | string | `ip` `ipv6` | |
 action_result.parameter.category_ids | string | | |
 action_result.parameter.comment | string | | |
+action_result.parameter.request_timeout | numeric | | |
 action_result.data.\*.data.ipAddress | string | `ip` `ipv6` | 8.8.8.8 2001:4860:4860::8888 |
 action_result.data.\*.data.abuseConfidenceScore | numeric | | 0 |
 action_result.summary.categories_filed | numeric | | 4 |

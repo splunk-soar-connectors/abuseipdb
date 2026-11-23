@@ -30,7 +30,11 @@ def register_actions(app: App) -> App:
         name="lookup ip",
         identifier="lookup_ip",
         description="Queries IP info",
-        verbose="The AbuseIPDB service has a limit of 1000 lookups per day.",
+        verbose=(
+            "Daily lookup limits depend on your AbuseIPDB subscription plan. "
+            "See the <a href='https://docs.abuseipdb.com/#api-daily-rate-limits'>"
+            "AbuseIPDB API documentation</a> for current quotas."
+        ),
         action_type="investigate",
         read_only=True,
         render_as="table",
